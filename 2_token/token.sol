@@ -1,4 +1,21 @@
-pragma solidity ^0.4.24;
+//SPDX-License-Identifier: GPL-3.0
+
+pragma solidity >=0.8.7;
+
+import "./SafeMath.sol";
+import "./IERC20.sol";
+
+contract StockholmToken is IERC20 {
+    using SafeMath for uint;
+    uint public myNumber = 5;
+    function addNumber() external {
+        myNumber = myNumber.add(3);
+    }
+
+
+}
+
+
 
  
 contract ApproveAndCallFallBack {
@@ -26,7 +43,8 @@ contract QKCToken is ERC20Interface, SafeMath {
     }
  
     function totalSupply() public constant returns (uint) {
-        return _totalSupply  - balances[address(0)];
+        return _totalSupply  - .
+        balances[address(0)];
     }
  
     function balanceOf(address tokenOwner) public constant returns (uint balance) {
