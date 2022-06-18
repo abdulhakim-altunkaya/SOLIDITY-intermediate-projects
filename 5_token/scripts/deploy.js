@@ -6,7 +6,7 @@
 const hre = require("hardhat");
 
 async function main() {
-  const SpindelToken = await hre.ethers.getContractFactory("DevToken");
+  const SpindelToken = await hre.ethers.getContractFactory("SpindelToken");
   const spindelToken = await SpindelToken.deploy("1000000000000000000000000000");
 
   await spindelToken.deployed();
