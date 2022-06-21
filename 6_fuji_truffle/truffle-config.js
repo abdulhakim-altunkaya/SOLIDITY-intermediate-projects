@@ -1,27 +1,6 @@
-/**
- * Use this file to configure your truffle project. It's seeded with some
- * common settings for different networks and features like migrations,
- * compilation and testing. Uncomment the ones you need or modify
- * them to suit your project as necessary.
- *
- * More information about configuration can be found at:
- * 
- * https://trufflesuite.com/docs/truffle/reference/configuration
- *
- * To deploy via Infura you'll need a wallet provider (like @truffle/hdwallet-provider)
- * to sign your transactions before they're sent to a remote public node. Infura accounts
- * are available for free at: infura.io/register.
- *
- * You'll also need a mnemonic - the twelve word phrase the wallet uses to generate
- * public/private key pairs. If you're publishing your code to GitHub make sure you load this
- * phrase from a file you've .gitignored so it doesn't accidentally become public.
- *
- */
-
-// const HDWalletProvider = require('@truffle/hdwallet-provider');
-//
-// const fs = require('fs');
-// const mnemonic = fs.readFileSync(".secret").toString().trim();
+const HDWalletProvider = require("@truffle/hdwallet-provider");
+require('dotenv').config()
+const privateKeys = [`0x${process.env.PRIVATE_KEY}`]
 
 module.exports = {
   /**
@@ -71,6 +50,13 @@ module.exports = {
     // network_id: 2111,   // This network is yours, in the cloud.
     // production: true    // Treats this network as if it was a public net. (default: false)
     // }
+    avalanche: {
+      provider: () => new HDWalletProvider(privateKeys, `https://avax.getblock.io/testnet/ext/bc/C/rpc?api_key=e12af9c7-fd71-4b02-aac7-73d29e2d5118`),
+      network_id: 43113,
+      confirmations: 2,
+      timeoutBlocks: 200,
+      skipDryRun: true
+    }
   },
 
   // Set default mocha options here, use special reporters etc.
@@ -81,7 +67,7 @@ module.exports = {
   // Configure your compilers
   compilers: {
     solc: {
-      version: "0.8.13",      // Fetch exact version from solc-bin (default: truffle's version)
+      version: "0.8.7",      // Fetch exact version from solc-bin (default: truffle's version)
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
       // settings: {          // See the solidity docs for advice about optimization and evmVersion
       //  optimizer: {
