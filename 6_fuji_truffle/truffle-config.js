@@ -51,9 +51,9 @@ module.exports = {
     // production: true    // Treats this network as if it was a public net. (default: false)
     // }
 
-    avalanche: {
-      provider: () => new HDWalletProvider(privateKeys, `https://avax.getblock.io/testnet/ext/bc/C/rpc?api_key=6dae0466-0784-48ed-baaa-9953bf531ed2`),
-      network_id: 43113,
+    matic : {
+      provider: () => new HDWalletProvider(privateKeys, `https://polygon-mumbai.g.alchemy.com/v2/S9Tdb0NbwIye3ZUbD9AxEUg4elymhWHX`),
+      network_id: 80001,
       confirmations: 2,
       timeoutBlocks: 200,
       skipDryRun: true
