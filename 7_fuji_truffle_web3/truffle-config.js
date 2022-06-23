@@ -51,7 +51,7 @@ module.exports = {
     // production: true    // Treats this network as if it was a public net. (default: false)
     // }
     matic: {
-      provider: () => new HDWalletProvider(privateKeys, `https://polygon-mumbai.g.alchemy.com/v2/916KrJwj5CP-Fnkxu1n2zjTNq_NHyi4b`),
+      provider: () => new HDWalletProvider(privateKeys, `https://polygon-mumbai.g.alchemy.com/v2/T5meXphJo3dKT-MGEA86DvDk_wEb0aBG`),
       network_id: 80001,
       confirmations: 2,
       timeoutBlocks: 200,
