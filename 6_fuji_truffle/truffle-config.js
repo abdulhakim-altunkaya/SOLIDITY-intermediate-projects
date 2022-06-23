@@ -50,8 +50,9 @@ module.exports = {
     // network_id: 2111,   // This network is yours, in the cloud.
     // production: true    // Treats this network as if it was a public net. (default: false)
     // }
+
     avalanche: {
-      provider: () => new HDWalletProvider(privateKeys, `https://avax.getblock.io/testnet/ext/bc/C/rpc?api_key=e12af9c7-fd71-4b02-aac7-73d29e2d5118`),
+      provider: () => new HDWalletProvider(privateKeys, `https://avax.getblock.io/testnet/ext/bc/C/rpc?api_key=6dae0466-0784-48ed-baaa-9953bf531ed2`),
       network_id: 43113,
       confirmations: 2,
       timeoutBlocks: 200,

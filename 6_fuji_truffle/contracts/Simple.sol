@@ -3,9 +3,9 @@
 pragma solidity >=0.8.7;
 
 contract Simple {
-    uint public myNum = 5;
+	uint public myNumber = 5;
 
-    function changeNum(uint _n) external {
-        myNum = _n;
-    }
+	function changeNumber(uint _newNumber) external {
+		myNumber = _newNumber;
+	}
 }
