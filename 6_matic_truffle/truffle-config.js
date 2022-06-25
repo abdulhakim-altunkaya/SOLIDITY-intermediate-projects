@@ -50,8 +50,9 @@ module.exports = {
     // network_id: 2111,   // This network is yours, in the cloud.
     // production: true    // Treats this network as if it was a public net. (default: false)
     // }
-    matic: {
-      provider: () => new HDWalletProvider(privateKeys, `https://polygon-mumbai.g.alchemy.com/v2/T5meXphJo3dKT-MGEA86DvDk_wEb0aBG`),
+
+    matic : {
+      provider: () => new HDWalletProvider(privateKeys, `https://polygon-mumbai.g.alchemy.com/v2/PBi-D73q6-VIYbm61q1cU1H9Sio8QkUo`),
       network_id: 80001,
       confirmations: 2,
       timeoutBlocks: 200,
@@ -63,6 +64,7 @@ module.exports = {
   mocha: {
     // timeout: 100000
   },
+
   // Configure your compilers
   compilers: {
     solc: {
