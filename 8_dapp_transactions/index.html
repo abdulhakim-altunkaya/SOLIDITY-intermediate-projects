@@ -44,7 +44,7 @@
         <button onclick="connectContract()">CONNECT TO CONTRACT</button>
         <p id="contractArea">Status: Not connected to Contract</p>
         <button onclick="getContractAccount()"> GET CONTRACT ACCOUNT </button>
-        <p id="userAccount">Contract Account: Not Connected to Contract</p>
+        <p id="contractAccount">Contract Account: Not Connected to Contract</p>
         <button onclick="getBalance()">GET BALANCE OF THE CONTRACT</button>
         <p id="balanceArea">Balance: Not Connected to Contract</p>
     </div>
@@ -59,7 +59,98 @@
 
     <script>
 
+        let account;
+        const connectMetamask = async () => {
+            if(window.ethereum !== "undefined") {
+                const accounts = await ethereum.request({method: "eth_requestAccounts"});
+                account = accounts[0];
+                document.getElementById("userArea").innerHTML = `user account is: ${account}`;
+            }
+        }
 
+        const connectContract = async () => {
+            const Address = "0xF8d86bCeaeF5C528d085ABa5e00803AaAcfC87B8";
+            const ABI = [
+                {
+                "inputs": [],
+                "name": "deposit",
+                "outputs": [],
+                "stateMutability": "payable",
+                "type": "function",
+                "payable": true
+                },
+                {
+                "inputs": [
+                    {
+                    "internalType": "address payable",
+                    "name": "_to",
+                    "type": "address"
+                    },
+                    {
+                    "internalType": "uint256",
+                    "name": "_amount",
+                    "type": "uint256"
+                    }
+                ],
+                "name": "withdraw",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+                },
+                {
+                "inputs": [],
+                "name": "getBalance",
+                "outputs": [
+                    {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function",
+                "constant": true
+                },
+                {
+                "inputs": [],
+                "name": "getAddress",
+                "outputs": [
+                    {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function",
+                "constant": true
+                }
+            ]
+            window.web3 = await new Web3(window.ethereum);
+            window.contract = await new window.web3.eth.Contract(ABI, Address);
+            document.getElementById("contractArea").innerHTML = window.contract.defaultBlock;
+        }
+
+        const getContractAccount = async () => {
+            let data = await window.contract.methods.getAddress().call();
+            document.getElementById("contractAccount").innerHTML = `smart contract wallet address: <br> ${data}`;
+        }
+
+        const getBalance = async () => {
+            let data = await window.contract.methods.getBalance().call();
+            document.getElementById("balanceArea").innerHTML = `Balance: ${data}`;
+        }
+
+        const depositContract = async () => {
+            let amount = document.getElementById("depositInput").value;
+            await window.contract.methods.deposit().send({value: amount, from: account});
+        }
+
+        const withdraw = async () => {
+            let amount = document.getElementById("amountInput2").value;
+            let addressReceiver = document.getElementById("addressInput2").value;
+            await window.contract.methods.withdraw(addressReceiver, amount).send({from: account});
+        }
     </script>
    
 </body>
