@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ETHER TRANSACTION DAPP</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.7-rc.0/web3.min.js"></script>
+    <style>
+        body {
+            background-color: palevioletred;
+            font-family: tahoma;
+            font-size: 33px;
+            display: flex;
+            flex-direction: row;
+        }
+        button {
+            background-color: aquamarine;
+            font-size: 33px;
+            padding: 5px;
+            font-family: Impact;
+        }
+        input {
+            width: 25vw;
+            height: 30px;
+            font-size: 25px;
+            font-family: tahoma;
+            outline: none;
+        }
+        #readArea {
+            flex-basis: 50%;
+        }
+        #writeArea {
+            flex-basis: 50%;
+        }
+        button:hover {
+            background-color: yellow;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="readArea">
+        <button onclick="connectMetamask()">CONNECT TO METAMASK</button>
+        <p id="userArea">Status: Not connected to Metamask</p>
+        <button onclick="connectContract()">CONNECT TO CONTRACT</button>
+        <p id="contractArea">Status: Not connected to Contract</p>
+        <button onclick="getContractAccount()"> GET CONTRACT ACCOUNT </button>
+        <p id="userAccount">Contract Account: Not Connected to Contract</p>
+        <button onclick="getBalance()">GET BALANCE OF THE CONTRACT</button>
+        <p id="balanceArea">Balance: Not Connected to Contract</p>
+    </div>
+    <div id="writeArea">
+        <button onclick="depositContract()">Send ether to the Contract</button><br>
+        <input type="number" id="depositInput" placeholder="Enter Amount"><br> <br>
+
+        <button onclick="withdraw()">WITHDRAW ETHER TO ANY ADDRESS</button> <br>
+        <input type="text" id="addressInput2" placeholder="Enter Address"> <br>
+        <input type="number" id="amountInput2" placeholder="Enter Amount"> 
+    </div>
+
+    <script>
+
+
+    </script>
+   
+</body>
+</html>
