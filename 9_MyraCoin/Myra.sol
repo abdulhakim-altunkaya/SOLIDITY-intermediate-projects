@@ -31,15 +31,30 @@ contract Myra {
 
     function transfer(address receiver, uint numTokens) public returns(bool) {
         require(numTokens <= balances[msg.sender], "you dont have enough tokens");
-        
+        balances[msg.sender] -= numTokens;
+        balances[receiver] += numTokens;
+        emit Transfer(msg.sender, receiver, numTokens);
+        return true;   
     }
 
-    function transfer(address receiver, uint numTokens) public returns (bool) {
-    require(numTokens <= balances[msg.sender]);
-    balances[msg.sender] -= numTokens;
-    balances[receiver] += numTokens;
-    emit Transfer(msg.sender, receiver, numTokens);
-    return true;
-}
+    function approve(address delegate, uint numTokens) public returns (bool) {
+        allowed[msg.sender][delegate] = numTokens;
+        emit Approval(msg.sender, delegate, numTokens);
+        return true;
+    }
+
+    function allowance(address owner, address delegate) public view returns (uint) {
+        return allowed[owner][delegate];
+    }
+
+    function transferFrom(address owner, address buyer, uint numTokens) public returns (bool) {
+        require(numTokens <= balances[owner]);
+        require(numTokens <= allowed[owner][msg.sender]);
+        balances[owner] -= numTokens;
+        allowed[owner][msg.sender] -= numTokens;
+        balances[buyer] += numTokens;
+        emit Transfer(owner, buyer, numTokens);
+        return true;
+    }
 
 }
