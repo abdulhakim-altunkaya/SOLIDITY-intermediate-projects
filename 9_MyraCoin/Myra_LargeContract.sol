@@ -16,7 +16,7 @@ library SafeMath { // Only relevant functions
 }
 
 //The structure is based on ERC20 standard.
-contract Myra {
+contract Myra_Long {
 
     event Transfer(address indexed from, address indexed to, uint tokens);
     event Approval(address indexed tokenOwner, address indexed spender, uint tokens);

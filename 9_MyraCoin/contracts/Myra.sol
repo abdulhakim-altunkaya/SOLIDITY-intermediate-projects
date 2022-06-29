@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Capped.sol";
 
 contract Myra is ERC20 {
-    constructor() ERC("MyraCoin", "MMCC") {
-        _mint(msg.sender, 100*10**18)
+    constructor() ERC20("MyraCoin", "MMCC") {
+        _mint(msg.sender, 100*10**18);
     }
 }
