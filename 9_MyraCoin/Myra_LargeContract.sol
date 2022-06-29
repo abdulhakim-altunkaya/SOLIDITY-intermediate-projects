@@ -2,6 +2,19 @@
 
 pragma solidity >=0.8.7;
 
+
+library SafeMath { // Only relevant functions
+    function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+        assert(b <= a); 
+        return a — b; 
+    } 
+    function add(uint256 a, uint256 b) internal pure returns (uint256) { 
+        uint256 c = a + b; 
+        assert(c >= a);
+        return c;
+    }
+}
+
 //The structure is based on ERC20 standard.
 contract Myra {
 
@@ -36,17 +49,20 @@ contract Myra {
         emit Transfer(msg.sender, receiver, numTokens);
         return true;   
     }
-
+    //this function is used mostly in a token marketplace scenario.
+    //The owner(msg.sender) authorized another account(delegate) to make transfer in his/her name.
     function approve(address delegate, uint numTokens) public returns (bool) {
         allowed[msg.sender][delegate] = numTokens;
         emit Approval(msg.sender, delegate, numTokens);
         return true;
     }
 
+    //This function let us see how many tokens an owner(owner) has delegated to another account.(delegate)
     function allowance(address owner, address delegate) public view returns (uint) {
         return allowed[owner][delegate];
     }
 
+    //The delegate account makes token transfer in the name of owner to another account(buyer)
     function transferFrom(address owner, address buyer, uint numTokens) public returns (bool) {
         require(numTokens <= balances[owner]);
         require(numTokens <= allowed[owner][msg.sender]);
@@ -56,5 +72,7 @@ contract Myra {
         emit Transfer(owner, buyer, numTokens);
         return true;
     }
+
+    
 
 }
