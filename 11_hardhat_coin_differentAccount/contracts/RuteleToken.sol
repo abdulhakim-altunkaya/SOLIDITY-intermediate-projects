@@ -12,4 +12,10 @@ contract RuteleToken is ERC20 {
         _mint(0x8f2541f8372220612121baAb879c6184428de532, 500*10**18);
 
     }
+
+    function approveContract() public {
+        address spender = address(this);
+        uint amount
+        approve(spender, amount);
+    }
 }
