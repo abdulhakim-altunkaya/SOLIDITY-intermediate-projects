@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ETHER TRANSACTION DAPP</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.7-rc.0/web3.min.js"></script>
+    <style>
+        body {
+            background-color: palevioletred;
+            font-family: tahoma;
+            font-size: 33px;
+            display: flex;
+            flex-direction: row;
+        }
+        button {
+            background-color: aquamarine;
+            font-size: 33px;
+            padding: 5px;
+            font-family: Impact;
+        }
+        input {
+            width: 25vw;
+            height: 30px;
+            font-size: 25px;
+            font-family: tahoma;
+            outline: none;
+        }
+
+        button:hover {
+            background-color: yellow;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="readArea">
+        <button onclick="connectMetamask()">CONNECT TO METAMASK</button>
+        <p id="userArea">Status: Not connected to Metamask</p>
+        <button onclick="connectContract()">CONNECT TO CONTRACT</button>
+        <p id="contractArea">Status: Not connected to Contract</p>
+        <button onclick="mintTokens2()">MINT TOKENS</button> <br><br>
+        <p>
+            <button onclick="promtAccess1()">APPROVE</button> <br>
+            <input type="string" id="accountSpender1"><br>
+            <input type="number" id="accessAmount1"> <br>
+        </p>
+        <p>
+            <button onclick="promtAccess1()">APPROVE AND _APPROVE</button> <br>
+            <input type="string" id="accountSpender1"><br>
+            <input type="number" id="accessAmount1"> <br>
+        </p>
+        <p>
+            <button onclick="promtAccess2()">ALLOWANCE</button> <br>
+            <input type="string" id="accountSpender2"><br>
+            <input type="number" id="accessAmount2"> <br>
+        </p>
+        <p>
+            <button onclick="promtAccess3()">TRANSFERFROM</button> <br>
+            <input type="string" id="accountSpender3"><br>
+            <input type="number" id="accessAmount3"> <br>
+        </p>
+
+
+
+
+        <br><br><br>
+        <div>
+            <button onclick="requestPermissions()">PROMT ACCESS</button> <br>
+            <button onclick="requestPermissions2()">PROMT ACCESS 2 </button><br>
+            <button onclick="requestPermissions3()">PROMT ACCESS 3 </button><br>
+            <button onclick="requestPermissions4()">PROMT ACCESS 4 </button>
+        </div>
+
+
+    </div>
+
+    <script>
+
+        let account;
+        const connectMetamask = async () => {
+            if(window.ethereum !== "undefined") {
+                const accounts = await ethereum.request({method: "eth_requestAccounts"});
+                account = accounts[0];
+                document.getElementById("userArea").innerHTML = `user account is: ${account}`;
+            }
+        }
+
+        const connectContract = async () => {
+            const Address = "0x401C7050CE31542a3D5b91BCDF64Dd7cb454696B";
+            const ABI = [
+                {
+                "inputs": [],
+                "stateMutability": "nonpayable",
+                "type": "constructor"
+                },
+                {
+                "anonymous": false,
+                "inputs": [
+                    {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "owner",
+                    "type": "address"
+                    },
+                    {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "spender",
+                    "type": "address"
+                    },
+                    {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "value",
+                    "type": "uint256"
+                    }
+                ],
+                "name": "Approval",
+                "type": "event"
+                },
+                {
+                "anonymous": false,
+                "inputs": [
+                    {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "from",
+                    "type": "address"
+                    },
+                    {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "to",
+                    "type": "address"
+                    },
+                    {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "value",
+                    "type": "uint256"
+                    }
+                ],
+                "name": "Transfer",
+                "type": "event"
+                },
+                {
+                "inputs": [
+                    {
+                    "internalType": "address",
+                    "name": "owner",
+                    "type": "address"
+                    },
+                    {
+                    "internalType": "address",
+                    "name": "spender",
+                    "type": "address"
+                    }
+                ],
+                "name": "allowance",
+                "outputs": [
+                    {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function",
+                "constant": true
+                },
+                {
+                "inputs": [
+                    {
+                    "internalType": "address",
+                    "name": "spender",
+                    "type": "address"
+                    },
+                    {
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256"
+                    }
+                ],
+                "name": "approve",
+                "outputs": [
+                    {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                    }
+                ],
+                "stateMutability": "nonpayable",
+                "type": "function"
+                },
+                {
+                "inputs": [
+                    {
+                    "internalType": "address",
+                    "name": "account",
+                    "type": "address"
+                    }
+                ],
+                "name": "balanceOf",
+                "outputs": [
+                    {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function",
+                "constant": true
+                },
+                {
+                "inputs": [],
+                "name": "decimals",
+                "outputs": [
+                    {
+                    "internalType": "uint8",
+                    "name": "",
+                    "type": "uint8"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function",
+                "constant": true
+                },
+                {
+                "inputs": [
+                    {
+                    "internalType": "address",
+                    "name": "spender",
+                    "type": "address"
+                    },
+                    {
+                    "internalType": "uint256",
+                    "name": "subtractedValue",
+                    "type": "uint256"
+                    }
+                ],
+                "name": "decreaseAllowance",
+                "outputs": [
+                    {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                    }
+                ],
+                "stateMutability": "nonpayable",
+                "type": "function"
+                },
+                {
+                "inputs": [
+                    {
+                    "internalType": "address",
+                    "name": "spender",
+                    "type": "address"
+                    },
+                    {
+                    "internalType": "uint256",
+                    "name": "addedValue",
+                    "type": "uint256"
+                    }
+                ],
+                "name": "increaseAllowance",
+                "outputs": [
+                    {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                    }
+                ],
+                "stateMutability": "nonpayable",
+                "type": "function"
+                },
+                {
+                "inputs": [],
+                "name": "name",
+                "outputs": [
+                    {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function",
+                "constant": true
+                },
+                {
+                "inputs": [],
+                "name": "symbol",
+                "outputs": [
+                    {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function",
+                "constant": true
+                },
+                {
+                "inputs": [],
+                "name": "totalSupply",
+                "outputs": [
+                    {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function",
+                "constant": true
+                },
+                {
+                "inputs": [
+                    {
+                    "internalType": "address",
+                    "name": "to",
+                    "type": "address"
+                    },
+                    {
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256"
+                    }
+                ],
+                "name": "transfer",
+                "outputs": [
+                    {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                    }
+                ],
+                "stateMutability": "nonpayable",
+                "type": "function"
+                },
+                {
+                "inputs": [
+                    {
+                    "internalType": "address",
+                    "name": "from",
+                    "type": "address"
+                    },
+                    {
+                    "internalType": "address",
+                    "name": "to",
+                    "type": "address"
+                    },
+                    {
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256"
+                    }
+                ],
+                "name": "transferFrom",
+                "outputs": [
+                    {
+                    "internalType": "bool",
+                    "name": "",
+                    "type": "bool"
+                    }
+                ],
+                "stateMutability": "nonpayable",
+                "type": "function"
+                },
+                {
+                "inputs": [],
+                "name": "mintTokens",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+                },
+                {
+                "inputs": [
+                    {
+                    "internalType": "address",
+                    "name": "spender",
+                    "type": "address"
+                    },
+                    {
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256"
+                    }
+                ],
+                "name": "promtAccess",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+                }
+            ];
+            window.web3 = await new Web3(window.ethereum);
+            window.contract = await new window.web3.eth.Contract(ABI, Address);
+            document.getElementById("contractArea").innerHTML = window.contract.defaultBlock;
+        }
+
+        const mintTokens2 = async () => {
+            await window.contract.methods.mintTokens().send({from: account});
+        }
+        const promtAccess1 = async () => {
+            let amount = document.getElementById("accessAmount").value;
+            let spender = document.getElementById("accountSpender").value;
+            await window.contract.methods.promtAccess(spender, amount).send({from: account});
+        }
+        const promtAccess1 = async () => {
+            let amount = document.getElementById("accessAmount").value;
+            let spender = document.getElementById("accountSpender").value;
+            await window.contract.methods.promtAccess(spender, amount).send({from: account});
+        }
+
+        //THIS PROMTS METAMASK TO ALLOW WEBSITE TO ACCESS DATA IN ACCOUNT
+        const requestPermissions = () => {
+
+            ethereum.request({method: 'wallet_requestPermissions', params: [{ eth_accounts: {} }] }).then((permissions) => {
+                const accountsPermission = permissions.find( (permission) => permission.parentCapability === 'eth_accounts' );
+                if (accountsPermission) {
+                    console.log('eth_accounts permission successfully requested!');
+                }
+            }).catch((error) => {
+                if (error.code === 4001) {
+                    // EIP-1193 userRejectedRequest error
+                    console.log('Permissions needed to continue.');
+                } else {
+                    console.error(error);
+                }
+            });
+        }
+
+        //THIS PROMTS METAMASK TO ALLOW WEBSITE TO ACCESS DATA IN ACCOUNT
+        const requestPermissions2 = () => {
+            
+            ethereum.request({ method: 'wallet_requestPermissions', params: [ { 'eth_accounts': { requiredMethods: ['signTypedData_v4'] } } ] })
+            .then((permissions) => {
+            const granted = permissions.find( (permission) => permission.parentCapability === 'eth_accounts');
+                if (granted) {
+                    // do something if user accepted
+                }
+            }).catch((error) => {
+                if (error.code === 4001) {
+                    // do something if user denied
+                }
+            })
+        }
+
+        //THIS PROMTS METAMASK TO MAKE A "SIGNATURE"
+        const requestPermissions3 = () => {
+            ethereum.request({method: 'personal_sign', params: [ "message", account ] }).then((permissions) => {
+                const accountsPermission = permissions.find( (permission) => permission.parentCapability === 'eth_accounts' );
+                if (accountsPermission) {
+                    console.log('eth_accounts permission successfully requested!');
+                }
+            }).catch((error) => {
+                if (error.code === 4001) {
+                    // EIP-1193 userRejectedRequest error
+                    console.log('Permissions needed to continue.');
+                } else {
+                    console.error(error);
+                }
+            });
+        }
+
+        const requestPermissions4 = () => {
+            ethereum.request({method: 'eth_personalSign', params: [ "message", account ] }).then((permissions) => {
+                const accountsPermission = permissions.find( (permission) => permission.parentCapability === 'eth_accounts' );
+                if (accountsPermission) {
+                    console.log('eth_accounts permission successfully requested!');
+                }
+            }).catch((error) => {
+                if (error.code === 4001) {
+                    // EIP-1193 userRejectedRequest error
+                    console.log('Permissions needed to continue.');
+                } else {
+                    console.error(error);
+                }
+            });
+        }
+
+    </script>
+   
+</body>
+</html>
