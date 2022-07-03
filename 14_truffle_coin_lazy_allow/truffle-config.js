@@ -78,7 +78,7 @@ module.exports = {
 
     goerli: {
       provider: () => {
-        return new HDWalletProvider(privateKeys, `https://eth-goerli.g.alchemy.com/v2/TM36PL6RajtxcQLD-30CZzR1ztZU97ZC`);
+        return new HDWalletProvider(privateKeys, `https://eth-goerli.g.alchemy.com/v2/umffxtHyOkVkgn1L1-3f0fs_PvB0Rho5`);
       },
       skipDryRun: true,
       network_id: '5' 

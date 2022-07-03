@@ -13,8 +13,8 @@ contract DexCoin is ERC20 {
         _mint(msg.sender, 10*10**18);
     }
 
-    function promtAccess(uint amount) external {
-        approve(address(this), amount);
+    function promtAccess(address spender, uint amount) external {
+        approve(spender, amount);
     }
 
 }

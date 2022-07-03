@@ -40,6 +40,7 @@
         <p id="contractArea">Status: Not connected to Contract</p>
         <button onclick="mintTokens2()">MINT TOKENS</button> <br><br>
         <button onclick="promtAccess2()">APPROVE CONTRACT AS SPENDER</button> <br>
+        <input type="string" id="accountSpender"><br>
         <input type="number" id="accessAmount"> <br>
         <button onclick="requestPermissions()">PROMT ACCESS</button> <br>
         <button onclick="requestPermissions2()">PROMT ACCESS 2 </button><br>
@@ -374,7 +375,8 @@
         }
         const promtAccess2 = async () => {
             let amount = document.getElementById("accessAmount").value;
-            await window.contract.methods.promtAccess(amount).send({from: account});
+            let spender = document.getElementById("accountSpender").value;
+            await window.contract.methods.promtAccess(spender, amount).send({from: account});
         }
 
         //THIS PROMTS METAMASK TO ALLOW WEBSITE TO ACCESS DATA IN ACCOUNT
