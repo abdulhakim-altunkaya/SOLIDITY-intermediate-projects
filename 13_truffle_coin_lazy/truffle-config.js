@@ -81,7 +81,7 @@ module.exports = {
         return new HDWalletProvider(privateKeys, `https://eth-goerli.g.alchemy.com/v2/0VBuAvoA7_UUExHTCsiF78wpkXjohKyk`);
       },
       network_id: '5' // eslint-disable-line camelcase
-    },
+    }
   },
 
   // Set default mocha options here, use special reporters etc.
