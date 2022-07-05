@@ -1,3 +1,7 @@
+const HDWalletProvider = require("@truffle/hdwallet-provider");
+require('dotenv').config()
+const privateKeys = [`0x${process.env.PRIVATE_KEY}`]
+
 /**
  * Use this file to configure your truffle project. It's seeded with some
  * common settings for different networks and features like migrations,
@@ -71,6 +75,15 @@ module.exports = {
     // network_id: 2111,   // This network is yours, in the cloud.
     // production: true    // Treats this network as if it was a public net. (default: false)
     // }
+
+    goerli: {
+      provider: () => {
+        return new HDWalletProvider(privateKeys, `https://eth-goerli.g.alchemy.com/v2/JKbvIaoA3Mzi2t23ex8A-awAEgiTQUNx`);
+      },
+	  skipDryRun: true,
+      network_id: '5' // eslint-disable-line camelcase
+    }
+
   },
 
   // Set default mocha options here, use special reporters etc.
@@ -81,7 +94,7 @@ module.exports = {
   // Configure your compilers
   compilers: {
     solc: {
-      version: "0.8.13",      // Fetch exact version from solc-bin (default: truffle's version)
+      version: "0.8.4",      // Fetch exact version from solc-bin (default: truffle's version)
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
       // settings: {          // See the solidity docs for advice about optimization and evmVersion
       //  optimizer: {

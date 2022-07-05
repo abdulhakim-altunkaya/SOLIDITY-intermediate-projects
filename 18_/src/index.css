@@ -1,0 +1,29 @@
+body {
+  background-color: palevioletred;
+  font-family: tahoma;
+  font-size: 33px;
+  display: flex;
+  flex-direction: row;
+}
+button {
+  background-color: aquamarine;
+  font-size: 33px;
+  padding: 5px;
+  font-family: Impact;
+}
+input {
+  width: 25vw;
+  height: 30px;
+  font-size: 25px;
+  font-family: tahoma;
+  outline: none;
+}
+#readArea {
+  flex-basis: 50%;
+}
+#writeArea {
+  flex-basis: 50%;
+}
+button:hover {
+  background-color: yellow;
+}

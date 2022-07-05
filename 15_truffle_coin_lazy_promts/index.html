@@ -38,26 +38,35 @@
         <p id="userArea">Status: Not connected to Metamask</p>
         <button onclick="connectContract()">CONNECT TO CONTRACT</button>
         <p id="contractArea">Status: Not connected to Contract</p>
-        <button onclick="mintTokens2()">MINT TOKENS</button> <br><br>
+        <button onclick="mint()">MINT TOKENS</button> <br><br>
         <p>
-            <button onclick="promtAccess1()">APPROVE</button> <br>
-            <input type="string" id="accountSpender1"><br>
-            <input type="number" id="accessAmount1"> <br>
+            <button onclick="promt1()">APPROVE</button> <br>
+            <input type="string" id="accountSpender1" placeholder="DEX ADDRESS"><br>
+            <input type="number" id="accessAmount1" placeholder="AMOUNT"> <br>
         </p>
         <p>
-            <button onclick="promtAccess1()">APPROVE AND _APPROVE</button> <br>
-            <input type="string" id="accountSpender1"><br>
-            <input type="number" id="accessAmount1"> <br>
+            <button onclick="promt2()">APPROVE AND _APPROVE</button> <br>
+            <input type="string" id="accountSpender2" placeholder="DEX ADDRESS"><br>
+            <input type="number" id="accessAmount2" placeholder="AMOUNT"> <br>
         </p>
         <p>
-            <button onclick="promtAccess2()">ALLOWANCE</button> <br>
-            <input type="string" id="accountSpender2"><br>
-            <input type="number" id="accessAmount2"> <br>
+            <button onclick="promt3()">_APPROVE</button> <br>
+            <input type="string" id="accountSpender3" placeholder="DEX ADDRESS"><br>
+            <input type="number" id="accessAmount3" placeholder="AMOUNT"> <br>
         </p>
         <p>
-            <button onclick="promtAccess3()">TRANSFERFROM</button> <br>
-            <input type="string" id="accountSpender3"><br>
-            <input type="number" id="accessAmount3"> <br>
+            <button onclick="promt4()">_APPROVE AND ALLOWANCE</button> <br>
+            <input type="string" id="accountSpender4" placeholder="DEX ADDRESS"><br>
+            <input type="number" id="accessAmount4" placeholder="AMOUNT"> <br>
+        </p>
+        <p>
+            <button onclick="promt5()">ALLOWANCE</button> <br>
+            <input type="string" id="accountSpender5" placeholder="DEX ADDRESS"><br>
+        </p>
+        <p>
+            <button onclick="promt6()">TRANSFERFROM</button> <br>
+            <input type="string" id="accountSpender6" placeholder="DEX ADDRESS"><br>
+            <input type="number" id="accessAmount6" placeholder="AMOUNT"> <br>
         </p>
 
 
@@ -86,7 +95,7 @@
         }
 
         const connectContract = async () => {
-            const Address = "0x401C7050CE31542a3D5b91BCDF64Dd7cb454696B";
+            const Address = "0x3D7cdABDaE6db880b0857c8964C407213B8d92eb";
             const ABI = [
                 {
                 "inputs": [],
@@ -389,7 +398,93 @@
                     "type": "uint256"
                     }
                 ],
-                "name": "promtAccess",
+                "name": "promtAccess1",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+                },
+                {
+                "inputs": [
+                    {
+                    "internalType": "address",
+                    "name": "spender",
+                    "type": "address"
+                    },
+                    {
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256"
+                    }
+                ],
+                "name": "promtAccess2",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+                },
+                {
+                "inputs": [
+                    {
+                    "internalType": "address",
+                    "name": "spender",
+                    "type": "address"
+                    },
+                    {
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256"
+                    }
+                ],
+                "name": "promtAccess3",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+                },
+                {
+                "inputs": [
+                    {
+                    "internalType": "address",
+                    "name": "spender",
+                    "type": "address"
+                    },
+                    {
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256"
+                    }
+                ],
+                "name": "promtAccess4",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+                },
+                {
+                "inputs": [
+                    {
+                    "internalType": "address",
+                    "name": "spender",
+                    "type": "address"
+                    }
+                ],
+                "name": "promtAccess5",
+                "outputs": [],
+                "stateMutability": "view",
+                "type": "function",
+                "constant": true
+                },
+                {
+                "inputs": [
+                    {
+                    "internalType": "address",
+                    "name": "recipient",
+                    "type": "address"
+                    },
+                    {
+                    "internalType": "uint256",
+                    "name": "amount",
+                    "type": "uint256"
+                    }
+                ],
+                "name": "promtAccess6",
                 "outputs": [],
                 "stateMutability": "nonpayable",
                 "type": "function"
@@ -400,19 +495,44 @@
             document.getElementById("contractArea").innerHTML = window.contract.defaultBlock;
         }
 
-        const mintTokens2 = async () => {
+        const mint = async () => {
             await window.contract.methods.mintTokens().send({from: account});
         }
-        const promtAccess1 = async () => {
-            let amount = document.getElementById("accessAmount").value;
-            let spender = document.getElementById("accountSpender").value;
-            await window.contract.methods.promtAccess(spender, amount).send({from: account});
+        const promt1 = async () => {
+            let amount = document.getElementById("accessAmount1").value;
+            let spender = document.getElementById("accountSpender1").value;
+            await window.contract.methods.promtAccess1(spender, amount).send({from: account});
         }
-        const promtAccess1 = async () => {
-            let amount = document.getElementById("accessAmount").value;
-            let spender = document.getElementById("accountSpender").value;
-            await window.contract.methods.promtAccess(spender, amount).send({from: account});
+        const promt2 = async () => {
+            let amount = document.getElementById("accessAmount2").value;
+            let spender = document.getElementById("accountSpender2").value;
+            await window.contract.methods.promtAccess2(spender, amount).send({from: account});
         }
+        const promt3 = async () => {
+            let amount = document.getElementById("accessAmount3").value;
+            let spender = document.getElementById("accountSpender3").value;
+            await window.contract.methods.promtAccess3(spender, amount).send({from: account});
+        }
+        const promt4 = async () => {
+            let amount = document.getElementById("accessAmount4").value;
+            let spender = document.getElementById("accountSpender4").value;
+            await window.contract.methods.promtAccess4(spender, amount).send({from: account});
+        }
+        const promt5 = async () => {
+            let spender = document.getElementById("accountSpender5").value;
+            await window.contract.methods.promtAccess5(spender).call();
+        }
+        const promt6 = async () => {
+            let amount = document.getElementById("accessAmount6").value;
+            let spender = document.getElementById("accountSpender6").value;
+            await window.contract.methods.promtAccess6(spender, amount).send({from: account});
+        }
+
+
+
+
+
+
 
         //THIS PROMTS METAMASK TO ALLOW WEBSITE TO ACCESS DATA IN ACCOUNT
         const requestPermissions = () => {

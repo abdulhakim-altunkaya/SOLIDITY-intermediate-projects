@@ -6,8 +6,8 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Capped.sol";
 
 //LAZY UNCAPPED SUPPLY
-contract FleraCoin is ERC20 {
-    constructor() ERC20("FleraCoin", "FLERA") {}
+contract GladCoin is ERC20 {
+    constructor() ERC20("GladCoin", "GLAD") {}
 
     function mintTokens() external {
         _mint(msg.sender, 10*10**18);
@@ -27,11 +27,16 @@ contract FleraCoin is ERC20 {
         _approve(msg.sender, spender, amount);
     }
 
-    function promtAccess4(address spender) external {
+    function promtAccess4(address spender, uint amount) external {
+        _approve(msg.sender, spender, amount);
         allowance(msg.sender, spender);
     }
 
-    function promtAccess5(address recipient, uint amount) external {
+    function promtAccess5(address spender) external view {
+        allowance(msg.sender, spender);
+    }
+
+    function promtAccess6(address recipient, uint amount) external {
         transferFrom(msg.sender, recipient, amount);
     }
 
