@@ -1,5 +1,3 @@
-
-
 function App() {
   const connectMetamask = () => {
     return;
