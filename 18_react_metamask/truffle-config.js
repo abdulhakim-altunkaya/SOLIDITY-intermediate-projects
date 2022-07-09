@@ -8,10 +8,10 @@ module.exports = {
   networks: {
     goerli: {
       provider: () => {
-        return new HDWalletProvider(privateKeys, `https://eth-goerli.g.alchemy.com/v2/SGj08NvjAXmtt8VM8guMQkO2g4VdmR1W`);
+        return new HDWalletProvider(privateKeys, `https://polygon-mumbai.g.alchemy.com/v2/0exBPMcf71s82PG_wgz2x8pj7JE3GfCL`);
       },
 	    skipDryRun: true,
-      network_id: '5'
+      network_id: '80001'
     }
   },
 
