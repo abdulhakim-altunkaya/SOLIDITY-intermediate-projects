@@ -1,28 +1,30 @@
-import { useRef, useState } from "react";
-import { useWeb3React } from "@web3-react/core"
-import { injected } from "./wallet/Connectors"
+import { useState } from "react";
 
 function App() {
-  const { active, account, library, connector, activate, deactivate } = useWeb3React();
+  const { ethereum } = window;
+
+  let [account, setAccount] = useState("")
 
   const connectMetamask = async () => {
-    try {
-      await activate(injected)
-    } catch (ex) {
-      console.log(ex)
+    if (window.ethereum !== "undefined") {
+      const accounts = await ethereum.request({method: "eth_requestAccounts"});
+      account = accounts[0];
+      setAccount(account);
     }
   }
+
   const connectContract = async () => {
     return;
   }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <button onClick={connectMetamask}>CONNECT TO METAMASK</button>
-        <p id="areaMetamask">{account}</p>
-        <button onClick={connectContract}>CONNECT TO CONTRACT</button>
-        <p id="areaConnection"></p>
-      </header>
+        <header className="App-header">
+          <button onClick={connectMetamask}>CONNECT TO METAMASK</button>
+          <p id="areaMetamask">{account}</p>
+          <button onClick={connectContract}>CONNECT TO CONTRACT</button>
+          <p id="areaConnection"></p>
+        </header>
     </div>
   );
 }
