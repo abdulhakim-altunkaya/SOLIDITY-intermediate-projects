@@ -7,12 +7,13 @@ module.exports = {
   networks: {
     matic: {
       provider: () => {
-        return new HDWalletProvider(privateKeys, `https://polygon-mumbai.g.alchemy.com/v2/33TtIpx9ZEFVM8oekq6T4GycA9KjC67B`);
+        return new HDWalletProvider(privateKeys, process.env.PROVIDER_URL);
       },
 	    skipDryRun: true,
       network_id: '80001'
     }
   },
+
 
   // Set default mocha options here, use special reporters etc.
   mocha: {
