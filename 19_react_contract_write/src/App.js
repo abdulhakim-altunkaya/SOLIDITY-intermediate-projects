@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function App() {
   const { ethereum } = window;
@@ -14,7 +14,7 @@ function App() {
   }
 
   let contract;
-  let signer;
+  let signer;  
   const connectContract = async () => {
     const ABI = [
       {
@@ -49,8 +49,21 @@ function App() {
     setContractData(data);
   }
 
+    /* The thing is if I click on connectContract, then getData the state will change. Then if I click on changeData, it will give error
+    However, if I click on connectContract, then changeData and then getData, there wont be errors. 
+
+    The reason is, when the state of the component changes, it resets everything. That is why I cannot changeData later because 
+    "contract" object will be reset.
+
+    To fix it, 3 solutions: 
+    1) use html and vanilla javascript instead of react
+    2) Or click on this order: connectContract, changeData, getData
+    3) Or wrap connectContract inside useEffect() and save variable values inside useRef. Which means a react shithole.
+     */
   const changeData = async () => {
-    return;
+    const txResponse = await contract.changeFlower();
+    const txReceipt = await txResponse.wait();
+    console.log(txReceipt);
   }
   return (
     <div>
