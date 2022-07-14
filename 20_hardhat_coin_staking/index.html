@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RUTELE TOKEN DAPP</title>
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"
+        type="application/javascript"></script>
+    <style>
+        body {
+            background-color: palevioletred;
+            font-family: tahoma;
+            font-size: 25px;
+            display: flex;
+            flex-direction: row;
+        }
+        button {
+            background-color: aquamarine;
+            font-size: 33px;
+            padding: 5px;
+            font-family: Impact;
+        }
+        input {
+            width: 25vw;
+            height: 30px;
+            font-size: 25px;
+            font-family: tahoma;
+            outline: none;
+        }
+
+        button:hover {
+            background-color: yellow;
+        }
+        #readArea, #writeArea {
+            flex-basis: 50%;
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <div id="readArea">
+        <button onclick="connectMetamask()">CONNECT TO METAMASK</button>
+        <p id="userArea">Status: Not connected to Metamask</p>
+        <button onclick="connectContract()">CONNECT TO CONTRACT</button>
+        <p id="contractArea">Status: Not connected to Contract</p>
+        <button onclick="getName()">GET NAME OF TOKEN</button>
+        <p id="nameArea">Name of the Token: Unknown</p>
+        <button onclick="getTotalMintAmount()">GET TOTAL MINTED AMOUNT</button>
+        <p id="totalArea">Total amount of minted tokens: unknown</p>
+
+
+    </div>
+    <div id="writeArea">
+        <button onclick="mintTokens()">MINT TOKENS </button>
+        <input type="number" id="mintAmount">
+        <br><br>
+        <button onclick="burnTokens()">BURN TOKENS</button>
+        <input type="number" id="burnAmount">
+    </div>
+
+    <script>
+
+
+        let account;
+        const connectMetamask = async () => {
+          if(window.ethereum !== "undefined") {
+            const accounts = await ethereum.request({ method: "eth_requestAccounts"});
+            account = accounts[0];
+            document.getElementById("userArea").innerHTML = account;
+          }
+        }
+
+
+        let contract;
+        let signer;
+        const connectContract = async () => {
+            const ABI = [
+            {
+            "inputs": [
+                {
+                "internalType": "uint256",
+                "name": "cap",
+                "type": "uint256"
+                }
+            ],
+            "stateMutability": "nonpayable",
+            "type": "constructor"
+            },
+            {
+            "anonymous": false,
+            "inputs": [
+                {
+                "indexed": true,
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+                },
+                {
+                "indexed": true,
+                "internalType": "address",
+                "name": "spender",
+                "type": "address"
+                },
+                {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "value",
+                "type": "uint256"
+                }
+            ],
+            "name": "Approval",
+            "type": "event"
+            },
+            {
+            "anonymous": false,
+            "inputs": [
+                {
+                "indexed": true,
+                "internalType": "address",
+                "name": "from",
+                "type": "address"
+                },
+                {
+                "indexed": true,
+                "internalType": "address",
+                "name": "to",
+                "type": "address"
+                },
+                {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "value",
+                "type": "uint256"
+                }
+            ],
+            "name": "Transfer",
+            "type": "event"
+            },
+            {
+            "inputs": [
+                {
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+                },
+                {
+                "internalType": "address",
+                "name": "spender",
+                "type": "address"
+                }
+            ],
+            "name": "allowance",
+            "outputs": [
+                {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+            },
+            {
+            "inputs": [
+                {
+                "internalType": "address",
+                "name": "spender",
+                "type": "address"
+                },
+                {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+                }
+            ],
+            "name": "approve",
+            "outputs": [
+                {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+                }
+            ],
+            "stateMutability": "nonpayable",
+            "type": "function"
+            },
+            {
+            "inputs": [
+                {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+                }
+            ],
+            "name": "balanceOf",
+            "outputs": [
+                {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+            },
+            {
+            "inputs": [
+                {
+                "internalType": "uint256",
+                "name": "_amount",
+                "type": "uint256"
+                }
+            ],
+            "name": "burnTokens",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+            },
+            {
+            "inputs": [],
+            "name": "cap",
+            "outputs": [
+                {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+            },
+            {
+            "inputs": [],
+            "name": "decimals",
+            "outputs": [
+                {
+                "internalType": "uint8",
+                "name": "",
+                "type": "uint8"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+            },
+            {
+            "inputs": [
+                {
+                "internalType": "address",
+                "name": "spender",
+                "type": "address"
+                },
+                {
+                "internalType": "uint256",
+                "name": "subtractedValue",
+                "type": "uint256"
+                }
+            ],
+            "name": "decreaseAllowance",
+            "outputs": [
+                {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+                }
+            ],
+            "stateMutability": "nonpayable",
+            "type": "function"
+            },
+            {
+            "inputs": [
+                {
+                "internalType": "address",
+                "name": "otherContract",
+                "type": "address"
+                },
+                {
+                "internalType": "uint256",
+                "name": "_amount",
+                "type": "uint256"
+                }
+            ],
+            "name": "donateTokens",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+            },
+            {
+            "inputs": [],
+            "name": "getMintedTokens",
+            "outputs": [
+                {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+            },
+            {
+            "inputs": [],
+            "name": "getName",
+            "outputs": [
+                {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+            },
+            {
+            "inputs": [
+                {
+                "internalType": "uint256",
+                "name": "_amount",
+                "type": "uint256"
+                }
+            ],
+            "name": "getTokens",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+            },
+            {
+            "inputs": [
+                {
+                "internalType": "address",
+                "name": "spender",
+                "type": "address"
+                },
+                {
+                "internalType": "uint256",
+                "name": "addedValue",
+                "type": "uint256"
+                }
+            ],
+            "name": "increaseAllowance",
+            "outputs": [
+                {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+                }
+            ],
+            "stateMutability": "nonpayable",
+            "type": "function"
+            },
+            {
+            "inputs": [],
+            "name": "name",
+            "outputs": [
+                {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+            },
+            {
+            "inputs": [],
+            "name": "symbol",
+            "outputs": [
+                {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+            },
+            {
+            "inputs": [],
+            "name": "totalSupply",
+            "outputs": [
+                {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+            },
+            {
+            "inputs": [
+                {
+                "internalType": "address",
+                "name": "to",
+                "type": "address"
+                },
+                {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+                }
+            ],
+            "name": "transfer",
+            "outputs": [
+                {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+                }
+            ],
+            "stateMutability": "nonpayable",
+            "type": "function"
+            },
+            {
+            "inputs": [
+                {
+                "internalType": "address",
+                "name": "from",
+                "type": "address"
+                },
+                {
+                "internalType": "address",
+                "name": "to",
+                "type": "address"
+                },
+                {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+                }
+            ],
+            "name": "transferFrom",
+            "outputs": [
+                {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+                }
+            ],
+            "stateMutability": "nonpayable",
+            "type": "function"
+            }
+        ]
+            const Address = "0x4a4995ED1f26D08BD751d6ae09DFEB5ab60bD8F8";
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            signer = provider.getSigner();
+            contract = new ethers.Contract(Address, ABI, signer);
+            document.getElementById("contractArea").innerHTML = `Status: Connected. Contract address: ${contract.address}`
+        }
+
+        const getName = async () => {
+            const data = await contract.getName();
+            document.getElementById("nameArea").innerHTML = `Name of the Token: ${data}`;
+        }
+
+        const getTotalMintAmount = async () => {
+            const data = await contract.getMintedTokens();
+            document.getElementById("totalArea").innerHTML = `Total amount of minted tokens: ${data}`;
+        }
+        
+        const mintTokens = async () => {
+            const amountInput = document.getElementById("mintAmount").value;
+            const txResponse = await contract.getTokens(amountInput);
+            const txReceipt = await txResponse.wait();
+            console.log(txReceipt);
+        }
+
+        const burnTokens = async () => {
+            const amountInput = document.getElementById("burnAmount").value;
+            const txResponse = await contract.burnTokens(amountInput);
+            const txReceipt = await txResponse.wait();
+            console.log(txReceipt);
+        }
+
+
+/*
+
+const changeData = async () => {
+    const txResponse = await contract.changeFlower();
+    const txReceipt = await txResponse.wait();
+    console.log(txReceipt);
+  }
+
+
+*/
+    </script>
+   
+</body>
+</html>

@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 function App() {
   const { ethereum } = window;
