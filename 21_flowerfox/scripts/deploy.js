@@ -7,18 +7,13 @@
 const hre = require("hardhat");
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-  const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
 
-  const lockedAmount = hre.ethers.utils.parseEther("1");
+  const FlowerFox = await hre.ethers.getContractFactory("FlowerFox");
+  const flowerFox = await FlowerFox.deploy("10000");
 
-  const Lock = await hre.ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
+  await flowerFox.deployed();
 
-  await lock.deployed();
-
-  console.log("Lock with 1 ETH deployed to:", lock.address);
+  console.log("FlowerFox Token is deployed to:", flowerFox.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

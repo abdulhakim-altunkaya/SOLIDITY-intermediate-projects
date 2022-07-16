@@ -2,7 +2,6 @@
 
 pragma solidity >= 0.8.9;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Capped.sol";
 
 contract FlowerFox is ERC20Capped {
@@ -34,5 +33,13 @@ contract FlowerFox is ERC20Capped {
         _burn(msg.sender, _amount*(10**18));
     }
 
+        //Function Caller -> Contract
+    fallback() external payable{}
+    receive() external payable{}
+
+    function withdraw(address payable _to, uint _amount) external onlyOwner {
+        (bool success, ) = _to.call{value: _amount*(10**18)}("");
+        require(success, "Either no money or address is wrong");
+    }
 
 }
