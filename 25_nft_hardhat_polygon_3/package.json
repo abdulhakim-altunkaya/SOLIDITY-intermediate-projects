@@ -19,13 +19,9 @@
     "typechain": "^8.1.0",
     "typescript": "^4.7.4"
   },
-  "name": "24_nft_hardhat_polygon_2",
-  "description": "This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.",
+  "name": "25_nft_hardhat_polygon_3",
   "version": "1.0.0",
-  "main": "hardhat.config.js",
-  "directories": {
-    "test": "test"
-  },
+  "main": "index.js",
   "devDependencies": {
     "mocha": "^10.0.0"
   },
@@ -34,5 +30,6 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "description": ""
 }
