@@ -12,21 +12,17 @@ contract Cizre is ERC721, ERC721URIStorage, Ownable {
     Counters.Counter private _tokenIdCounter;
 
 
+    //PART 6: wallets that minted NFT
+    mapping(address => uint256) public mintedWallets;
+
+    //PART 7: security function
+    bool public isMintEnabled = true;
+    function toggleMint() external onlyOwner {
+        isMintEnabled = !isMintEnabled;
+    }
+
     //PART 2: constructor
     constructor() ERC721("Cizre", "CIZRE") {}
-
-    //PART 3: minting function
-    function safeMint(address to, string memory uri) public onlyOwner {
-        uint256 tokenId = _tokenIdCounter.current();
-        _tokenIdCounter.increment();
-        _safeMint(to, tokenId);
-        _setTokenURI(tokenId, uri);
-    }
-
-    //PART 4: burning function
-    function burnToken(uint256 tokenId) external {
-        _burn(tokenId);
-    }
 
     //PART 5: minting pricing
     uint256 public mintPrice = 0;
@@ -37,9 +33,29 @@ contract Cizre is ERC721, ERC721URIStorage, Ownable {
         return mintPrice;
     }
 
+    //PART 3: minting function
+    function safeMint(address to, string memory uri) payable public onlyOwner {
+        require(msg.value >= mintPrice, "pay minting price");
+        require(mintedWallets[to] < 3, "max 3 nfts can be minted per wallet");
+        require(isMintEnabled == true, "minting is not enabled yet");
+
+        uint256 tokenId = _tokenIdCounter.current();
+        _tokenIdCounter.increment();
+        _safeMint(to, tokenId);
+        _setTokenURI(tokenId, uri);
+        mintedWallets[to]++;
+    }
+
+    //PART 4: burning function
+    function burnToken(uint256 tokenId) external {
+        _burn(tokenId);
+    }
 
 
 
+
+
+    //PART 6: overrides required by solidity
     function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
         super._burn(tokenId);
     }
