@@ -1,8 +1,10 @@
+// SPDX-License-Identifier: GPL-3.0
+
 // Sources flattened with hardhat v2.10.1 https://hardhat.org
 
 // File hardhat/console.sol@v2.10.1
 
-// SPDX-License-Identifier: MIT
+
 pragma solidity >= 0.4.22 <0.9.0;
 
 library console {
@@ -1538,7 +1540,7 @@ library console {
 
 // File contracts/Lock.sol
 
-// SPDX-License-Identifier: UNLICENSED
+
 pragma solidity >=0.8.1;
 
 // Import this file to use console.log
@@ -1575,7 +1577,7 @@ contract Lock {
 
 // File @openzeppelin/contracts/utils/introspection/IERC165.sol@v4.7.3
 
-// SPDX-License-Identifier: MIT
+
 // OpenZeppelin Contracts v4.4.1 (utils/introspection/IERC165.sol)
 
 pragma solidity ^0.8.0;
@@ -1604,7 +1606,7 @@ interface IERC165 {
 
 // File @openzeppelin/contracts/token/ERC721/IERC721.sol@v4.7.3
 
-// SPDX-License-Identifier: MIT
+
 // OpenZeppelin Contracts (last updated v4.7.0) (token/ERC721/IERC721.sol)
 
 pragma solidity ^0.8.0;
@@ -1749,7 +1751,7 @@ interface IERC721 is IERC165 {
 
 // File @openzeppelin/contracts/token/ERC721/IERC721Receiver.sol@v4.7.3
 
-// SPDX-License-Identifier: MIT
+
 // OpenZeppelin Contracts (last updated v4.6.0) (token/ERC721/IERC721Receiver.sol)
 
 pragma solidity ^0.8.0;
@@ -1780,7 +1782,7 @@ interface IERC721Receiver {
 
 // File @openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol@v4.7.3
 
-// SPDX-License-Identifier: MIT
+
 // OpenZeppelin Contracts v4.4.1 (token/ERC721/extensions/IERC721Metadata.sol)
 
 pragma solidity ^0.8.0;
@@ -1809,7 +1811,7 @@ interface IERC721Metadata is IERC721 {
 
 // File @openzeppelin/contracts/utils/Address.sol@v4.7.3
 
-// SPDX-License-Identifier: MIT
+
 // OpenZeppelin Contracts (last updated v4.7.0) (utils/Address.sol)
 
 pragma solidity ^0.8.1;
@@ -2035,7 +2037,7 @@ library Address {
 
 // File @openzeppelin/contracts/utils/Context.sol@v4.7.3
 
-// SPDX-License-Identifier: MIT
+
 // OpenZeppelin Contracts v4.4.1 (utils/Context.sol)
 
 pragma solidity ^0.8.0;
@@ -2063,7 +2065,7 @@ abstract contract Context {
 
 // File @openzeppelin/contracts/utils/Strings.sol@v4.7.3
 
-// SPDX-License-Identifier: MIT
+
 // OpenZeppelin Contracts (last updated v4.7.0) (utils/Strings.sol)
 
 pragma solidity ^0.8.0;
@@ -2142,7 +2144,7 @@ library Strings {
 
 // File @openzeppelin/contracts/utils/introspection/ERC165.sol@v4.7.3
 
-// SPDX-License-Identifier: MIT
+
 // OpenZeppelin Contracts v4.4.1 (utils/introspection/ERC165.sol)
 
 pragma solidity ^0.8.0;
@@ -2173,7 +2175,7 @@ abstract contract ERC165 is IERC165 {
 
 // File @openzeppelin/contracts/token/ERC721/ERC721.sol@v4.7.3
 
-// SPDX-License-Identifier: MIT
+
 // OpenZeppelin Contracts (last updated v4.7.0) (token/ERC721/ERC721.sol)
 
 pragma solidity ^0.8.0;
@@ -2629,7 +2631,7 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
 
 // File @openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol@v4.7.3
 
-// SPDX-License-Identifier: MIT
+
 // OpenZeppelin Contracts (last updated v4.7.0) (token/ERC721/extensions/ERC721URIStorage.sol)
 
 pragma solidity ^0.8.0;
@@ -2693,7 +2695,7 @@ abstract contract ERC721URIStorage is ERC721 {
 
 // File @openzeppelin/contracts/access/Ownable.sol@v4.7.3
 
-// SPDX-License-Identifier: MIT
+
 // OpenZeppelin Contracts (last updated v4.7.0) (access/Ownable.sol)
 
 pragma solidity ^0.8.0;
@@ -2778,7 +2780,7 @@ abstract contract Ownable is Context {
 
 // File @openzeppelin/contracts/utils/Counters.sol@v4.7.3
 
-// SPDX-License-Identifier: MIT
+
 // OpenZeppelin Contracts v4.4.1 (utils/Counters.sol)
 
 pragma solidity ^0.8.0;
@@ -2825,7 +2827,6 @@ library Counters {
 
 // File contracts/Seattle.sol
 
-// SPDX-License-Identifier: GPL-3.0
 
 pragma solidity >=0.8.1;
 contract Seattle is ERC721, ERC721URIStorage, Ownable {
