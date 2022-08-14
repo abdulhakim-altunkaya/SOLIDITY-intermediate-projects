@@ -7,12 +7,9 @@
 const hre = require("hardhat");
 
 async function main() {
-
   const Boston = await hre.ethers.getContractFactory("Boston");
   const boston = await Boston.deploy();
-
   await boston.deployed();
-
   console.log("boston deployed to:", boston.address);
 }
 
