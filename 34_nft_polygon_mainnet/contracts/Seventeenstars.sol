@@ -28,31 +28,17 @@ contract Seventeenstars is ERC721, ERC721URIStorage, Ownable {
 
     //minting price is only for display purposes. 
     uint256 public mintingPrice = 0;
-    function changeMintingPrice(uint256 newPrice)  external onlyOwner {
+    function changeMintingPrice(uint256 newPrice) external onlyOwner {
         mintingPrice = newPrice;
     }
 
     constructor() ERC721("Seventeenstars", "SEVENS") {}
 
-    function safeMint() {}
-}
-
-
-    //setting minting price is also an extra caution. Does not have an effect on Contract.
-    uint256 public mintingPrice = 0;
-    function changeMintingPrice(uint256 newPrice) external onlyOwner {
-        mintingPrice = newPrice;
-    }
-
-    constructor() ERC721("Nineteenstars", "NINES") {}
-
-    function safeMint(address to, string memory uri) public payable {
-        require(mintingPrice <= msg.value, "pay the minting price");
-        require(isMintAllowed == true, "minting must be enabled by Owner");
-
+    function safeMint(address to, string memory uri) public payable onlyOwner {
+        //require(mintingPrice <= msg.value, "pay the minting price");
+        require(isMintAllowed == true, "minting must be enabled by owner");
         uint tokenId = _tokenIdCounter.current();
         require(tokenId < maxSupply, "this contract cannot mint more nfts");
-
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
@@ -66,7 +52,10 @@ contract Seventeenstars is ERC721, ERC721URIStorage, Ownable {
     function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
         super._burn(tokenId);
     }
-
     function tokenURI(uint256 tokenId) public view override(ERC721, ERC721URIStorage) returns (string memory) {
         return super.tokenURI(tokenId);
     }
+}
+
+
+
