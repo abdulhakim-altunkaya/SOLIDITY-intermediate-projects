@@ -1,5 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
+import GetBalance from './GetBalance';
+import GetContractDetails from './GetContractDetails';
 
 
 function ReadArea() {
@@ -11,15 +13,16 @@ function ReadArea() {
             const accounts = await ethereum.request({method: "eth_requestAccounts"});
             setAccount(accounts[0]);
         } else {
-            setAccount("Please install metamask my good sir")
+            setAccount("Please install metamask my good sir");
         }
     }
 
   return (
     <div className='ReadArea'>
-        <h1>Read Area Functions</h1>
-        <button onClick={connectMetamask}> Connect to Metamask </button>
+        <button className='button-56' onClick={connectMetamask}> Connect to Metamask </button>
         <p>Your Account is: {account}</p>
+        <GetBalance/>
+        <GetContractDetails/>
     </div>
   )
 }

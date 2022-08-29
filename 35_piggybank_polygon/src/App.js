@@ -1,11 +1,11 @@
-import WriteArea from "./components/WriteArea";
-import ReadArea from "./components/ReadArea";
+import Upperbar from "./components/Upperbar";
+import Lowerbar from "./components/Lowerbar";
 
 function App() {
   return (
     <div className="App">
-      <WriteArea/>
-      <ReadArea/>
+      <Upperbar/>
+      <Lowerbar/>
     </div>
   );
 }

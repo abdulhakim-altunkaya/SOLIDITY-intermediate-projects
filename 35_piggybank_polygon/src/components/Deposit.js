@@ -3,8 +3,8 @@ import React from 'react'
 function Deposit() {
   return (
     <div>
-
-      <input type="text" />
+      <label htmlFor="amount">Put some Matic in Piggybank</label>
+      <input type="number" name='amount' />
 
     </div>
   )
