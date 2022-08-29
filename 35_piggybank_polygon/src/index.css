@@ -58,6 +58,13 @@ input {
 input:focus {
   background-color: lightgoldenrodyellow;
 }
+@layer utilities {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
 
 
 /* BUTTON*/
@@ -117,4 +124,8 @@ input:focus {
   .button-56 {
     padding: 0 40px;
   }
+}
+
+#redButton {
+  background-color: #dc143c;
 }
