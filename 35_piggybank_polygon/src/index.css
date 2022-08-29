@@ -55,9 +55,7 @@ input {
   font-family: 'Rubik Dirt', cursive;
   border-radius: 4px;
 }
-input:focus {
-  background-color: lightgoldenrodyellow;
-}
+
 @layer utilities {
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {

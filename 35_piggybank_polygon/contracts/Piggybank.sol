@@ -2,7 +2,7 @@
 
 pragma solidity >=0.8.1;
 
-contract PiggyBank {
+contract Piggybank {
     event Deposit(address sender, uint amount);
     event Withdraw(address receiver, uint amount);
     event Destroy(uint amount, string text);
