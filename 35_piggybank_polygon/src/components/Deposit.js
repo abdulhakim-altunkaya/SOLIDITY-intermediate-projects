@@ -2,6 +2,7 @@ import React from 'react';
 import {ABI} from "./ContractABI.js";
 import { ethers } from "ethers";
 import { useState } from 'react';
+/* global BigInt */
 
 function Deposit() {
   let[inputValue, setInputValue] = useState("");
@@ -18,7 +19,8 @@ function Deposit() {
   }
   const depositMatic = async () => {
     connectContract();
-    const txResponse = await contract.depositEther({value: inputValue});
+    let finalAmount = BigInt(inputValue * (10**18));
+    const txResponse = await contract.depositEther({value: finalAmount});
     await txResponse.wait();
   }
   return (

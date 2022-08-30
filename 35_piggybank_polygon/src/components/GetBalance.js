@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { ethers } from 'ethers';
 import { ABI } from './ContractABI';
-
+import { BigNumber } from 'ethers';
 
 
 function GetBalance() {
@@ -18,11 +18,17 @@ function GetBalance() {
         signer = provider.getSigner();
         contract = new ethers.Contract(Address, ABI, signer);
     }
+    let data1;
     const getBalance = async () => {
         connectContract();
         const txResponse = await contract.getBalance();
-        const data = txResponse.toString();
-        setPiggyBalance(data);
+        data1 = ethers.BigNumber.from(txResponse);
+        let divisorBig = ethers.BigNumber.from(1000000000000000000); 
+        let data2 = data1 / divisorBig;
+
+
+        const data3 = data2.toString();
+        setPiggyBalance(data3);
     }
   return (
     <div>

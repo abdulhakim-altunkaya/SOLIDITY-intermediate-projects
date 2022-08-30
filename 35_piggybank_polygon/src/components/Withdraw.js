@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import { ethers } from "ethers";
 import { ABI } from "./ContractABI.js";
+/* global BigInt */
 
 function Withdraw() {
   let[inputValue, setInputValue] = useState("");
-  let provider;
   let signer;
   let contract;
   const CONTRACT_ABI = ABI;
@@ -12,16 +12,22 @@ function Withdraw() {
   const connectContract = async () => {
     const Address = "0xB5eF00143c460760e02Fd307fba828892A58c88C";
     const ABI = CONTRACT_ABI;
-
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    signer = provider.getSigner();
+    contract = new ethers.Contract(Address, ABI, signer);
   }
 
   const withdrawEther = async () => {
     connectContract();
+    let receiver = "0x1bbeb0f85dc2b84ee8541d85c9d5879d9b499e4a";
+    let finalAmount = BigInt(inputValue * (10**18));
+    const txResponse = await contract.withdrawEther(receiver, finalAmount);
+    await txResponse.wait();
   }
   return (
     <div>
         <br />
-        <button className='button-56' id="redButton" onClick={withdrawEther()}>Withdraw Matic (only Owner can click)</button> <br />
+        <button className='button-56' id="redButton" onClick={withdrawEther}>Withdraw Matic (only Owner can click)</button> <br />
         <input value={inputValue} onChange={e => setInputValue(e.target.value)} type="number" placeholder='withdraw...' /> 
         <p>{inputValue}</p>
     </div>
@@ -29,3 +35,4 @@ function Withdraw() {
 }
 
 export default Withdraw
+

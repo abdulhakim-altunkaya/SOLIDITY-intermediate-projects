@@ -36,6 +36,14 @@ contract Piggybank {
     function getBalance() external view returns(uint) {
         return address(this).balance;
     }
+    /*
+    Next time create this: Also, you can do the same for deposit and withdraw. It is a little pain to do them with React&Ethers
+
+    function getBalance() external view returns(uint) {
+        uint balanceFinal = address(this).balance / (10**18);
+        return balanceFinal;
+    }
+     */
 
     function getOwner() external view returns(address) {
         return owner;
