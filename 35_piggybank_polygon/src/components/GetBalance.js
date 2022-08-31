@@ -3,8 +3,6 @@ import { useState } from 'react';
 import { ethers } from 'ethers';
 import { ABI } from './ContractABI';
 
-
-
 function GetBalance() {
     let [piggyBalance, setPiggyBalance] = useState("");
     let signer;
