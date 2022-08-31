@@ -45,6 +45,12 @@ body {
   font-size: 40px;
 }
 
+#footnotePart {
+  position:absolute;
+  bottom:0;
+}
+
+
 
 /* INPUT */
 input {

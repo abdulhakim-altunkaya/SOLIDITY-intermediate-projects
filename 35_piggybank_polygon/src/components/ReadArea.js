@@ -19,10 +19,16 @@ function ReadArea() {
 
   return (
     <div className='ReadArea'>
-        <button className='button-56' onClick={connectMetamask}> Connect to Metamask </button>
-        <p>Your Account is: {account}</p>
-        <GetBalance/>
-        <GetContractDetails/>
+        <div id='contentPart'>
+            <button className='button-56' onClick={connectMetamask}> Connect to Metamask </button>
+            <p>Your Account is: {account}</p>
+            <GetBalance/>
+            <GetContractDetails/>
+        </div>
+        <div id='footnotePart'>
+            Completed on 31 August 2022, A. Altunkaya
+        </div>
+
     </div>
   )
 }
