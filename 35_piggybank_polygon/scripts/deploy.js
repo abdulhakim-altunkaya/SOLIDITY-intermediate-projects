@@ -9,9 +9,7 @@ const hre = require("hardhat");
 async function main() {
   const Piggybank = await hre.ethers.getContractFactory("Piggybank");
   const piggybank = await Piggybank.deploy();
-
   await piggybank.deployed();
-
   console.log(`piggybank deployed to ${piggybank.address}`);
 }
 

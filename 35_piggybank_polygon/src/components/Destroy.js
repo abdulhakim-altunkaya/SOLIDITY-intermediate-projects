@@ -32,7 +32,8 @@ function Destroy() {
 
   const destroyContract = async () => {
     connectContract();
-    console.log(contract.address);
+    const txResponse = await contract.destroyContract("0x1bbeb0f85dc2b84ee8541d85c9d5879d9b499e4a");
+    await txResponse.wait();
   }
 
   return (

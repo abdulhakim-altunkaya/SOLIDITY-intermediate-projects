@@ -40,6 +40,24 @@ function Withdraw() {
     const txResponse = await contract.withdrawEther(receiver, finalAmount);
     await txResponse.wait();
   }
+
+  var ethers = require("ethers");
+
+  const abi = <bayc abi here>;
+  var url = "your-quicknode-here"
+  var customWsProvider = new ethers.providers.WebSocketProvider(url);
+  let contractAddress = "0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D";
+  let contract = new ethers.Contract(contractAddress, abi, customWsProvider);
+  let privateKey = 'your-privatekey-here';
+  let wallet = new ethers.Wallet(privateKey, customWsProvider);
+  console.log("wallet connected for purchasing...")
+
+  wallet.sendTransaction???
+
+
+
+
+
   return (
     <div>
         <br />
