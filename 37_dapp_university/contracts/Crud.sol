@@ -12,16 +12,18 @@ contract Crud {
         name = "bla bla";
         count = 2;
     }
-}
 
-contract Crud2 {
     string public name2;
     uint public number2;
-    constructor(string memory _name) {
-        name2 = _name;
+
+
+    function increment(uint _number) external returns(uint) {
+        number2 = number2 + _number;
+        return number2;
     }
 
-    function increment(uint _number) external {
-        number2 = number2 + _number;
+    function getName() external view returns(string memory) {
+        return name;
     }
+
 }
