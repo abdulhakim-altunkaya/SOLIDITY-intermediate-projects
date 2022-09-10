@@ -34,7 +34,7 @@ contract Cizre is ERC721, ERC721URIStorage, Ownable {
 
     function safeMint(address to, string memory uri) public payable {
         require(mintingPrice <= msg.value, "pay the minting price");
-        require(isMintAllowed == true, "minting must be enable by Owner");
+        require(isMintingEnabled == true, "minting must be enable by Owner");
         
         uint tokenId = _tokenIdCounter.current();
         require(tokenId < maxSupply, "this contract cannot mint more nft");
