@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "dotenv": "^16.0.2",
+    "ethers": "^5.7.0",
+    "hardhat": "^2.11.1"
+  }
+}
