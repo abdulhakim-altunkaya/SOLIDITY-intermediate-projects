@@ -25,11 +25,21 @@ describe("deployment with beforeEach", () => {
         expect(newValue2).to.equal(16);
     })
 
-    it("should get the name", async () => {
-        let data = await crud.getName();
-        expect(data).to.be.reverted("bsla bla");
+    //REVERT 
+    // await place has changed. because I dont know.
+    //I think we need to wait for reverted function to return true.
+    it("decreament REVERT test", async () => {
+        await expect(crud.decrement()).to.be.reverted;
     })
 
+    //TRANSACTION
+    it("update a string variable by using TRANSACTION", async () => {
+        transaction = await crud.setName("emanuel");
+        await transaction.wait();
+        expect(await crud.name()).to.equal("emanuel");
+    })
+
+    //
 
 })
 

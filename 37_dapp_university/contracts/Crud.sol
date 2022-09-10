@@ -16,10 +16,16 @@ contract Crud {
     string public name2;
     uint public number2;
 
-
+    function setName(string memory _name) external {
+        name = _name;
+    }
     function increment(uint _number) external returns(uint) {
         number2 = number2 + _number;
         return number2;
+    }
+
+    function decrement() external {
+        number2--;
     }
 
     function getName() external view returns(string memory) {
