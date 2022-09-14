@@ -44,12 +44,10 @@ module.exports = {
 };
 
 
-If you choose "Goerli" testnet, change "matic" above to "goerli"
-
-⏩10) Make sure you contract and hardhat.config file have the same compiler version.
+⏩10) Make sure you contract and hardhat.config file use the same compiler version.
 
 
-🚩🚩🚩 PINATA PART 🚩🚩🚩
+🚩🚩🚩 IPFS / PINATA PART 🚩🚩🚩
 
 
 ⏩11) Upload your jpeg image photo to pinata or ipfs desktop.
@@ -125,10 +123,10 @@ contract Goat is ERC721, ERC721URIStorage, Ownable {
 ⏩18) Make sure compiler versions are the same across ".sol" and "hardhat.config.js" files
 ⏩19) Then configure deploy.js
 async function main() {
-  const Goat = await hre.ethers.getContractFactory("Goat");
-  const goat = await Goat.deploy();
-  await goat.deployed();
-  console.log("Goat Contract is deployed to:", goat.address);
+  const Nusaybin = await hre.ethers.getContractFactory("Nusaybin");
+  const nusaybin = await Nusaybin.deploy();
+  await nusaybin.deployed();
+  console.log("nusaybin Contract is deployed to:", nusaybin.address);
 }
 
 ⏩20) npx hardhat compile
