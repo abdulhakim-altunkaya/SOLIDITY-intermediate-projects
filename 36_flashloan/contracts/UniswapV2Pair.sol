@@ -41,4 +41,30 @@ contract Arbitrage {
         IUniswapV2Pair(pairAddress).swap(amount0, amount1, address(this), bytes("not empty"))
     }
 
+    /* sender: the address that triggered the transaction
+    amountToken: the amount borrowed (same as _amount0)
+    _amount0 = the amount borrowed (same as amountToken)
+    address[] = address that we will use to complete transaction
+    token0: address of the first token (dai) on uniswap liq pool
+    token1: address of the second token (eth) on uniswap liq pool
+    IERC20 token: a pointer to the token that we will sell on sushiswap
+    amountRequired: the amount of token that must be reimbursed to uniswap (??? is this not borrowed amount?)
+    */
+    function uniswapV2Call(address _sender, uint _amount0, uint _amount1, bytes calldata _data) external {
+        address[] memory path = new address[](2);
+        uint amountToken = _amount == 0 ? _amount1 : _amount0;
+        address token0 = IUniswapV2Pair(msg.sender).token0();
+        address token1 = IUniswapV2Pair(msg.sender).token1();
+        require(msg.sender == UniswapV2Library.pairFor(factory, token0, token1), "unauthorized");
+        require(_amount0 == 0 || _amount1 == 0);
+        path[0] = _amount0 == 0 ? token1 : token0;
+        path[1] = _amount1 == 0 ? token0 : token1;
+        IERC20 token = IERC20(_amount0 == 0 ? token1 : token0);
+        token.approve(address(sushiRouter), amountToken);
+        uint amountRequired = UniswapV2Library.getAmountsIn(factory, amountToken, path)[0];
+        uint amountReceived = sushiRouter.swapExactTokensForTokens(amountToken, amountRequired, path, msg.sender, deadline)[1];
+        IERC20 otherToken = IERC20(_amount0 == 0 ? token0 : token1);
+        otherToken.transfer(msg.sender, amountRequired); //reimburse loan
+        otherToken.transfer(tx.origin, amountReceived - amountRequired);  
+    }
 }
