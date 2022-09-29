@@ -7,6 +7,19 @@ import "./Token.sol";
 
 //this is flashloan pool contract. In reality, you wont need this, because
 //pools and their token address will be readily available by dexes.
+
+
+/*In the lines below, we are creating a contract variable called "Token"
+And saving the address of our token contract inside this variable. Thus
+we can "save" our contract inside this variable and use contract functions and
+variables. Not sure if I understand it much.
+
+import "./Token.sol";
+    Token public token;
+    constructor(address _tokenAddress){
+        token = Token(_tokenAddress);
+    }
+ */
 contract FlashLoan {
 
     Token public token;
