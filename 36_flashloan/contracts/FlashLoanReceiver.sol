@@ -20,6 +20,8 @@ contract FlashLoanReceiver {
     FlashLoan public pool;
     address public owner;
 
+    event LoanReceived(address token, uint amount);
+
     modifier onlyOwner(){
         require(msg.sender == owner, "you arent owner");
         _;
@@ -30,8 +32,11 @@ contract FlashLoanReceiver {
         owner = msg.sender;
     }
 
+    //only the pool can call this function after sending tokens to the receiver
     function receiveTokens(address _tokenAddress, uint _amount) external {
-        return;
+        require(msg.sender == address(pool), "sender must be pool");
+        require(Token(_tokenAddress).balanceOf(address(this)) == _amount, "receiveTokens function");
+        emit LoanReceived(_tokenAddress, _amount);
     }
 
     //3.step
