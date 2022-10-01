@@ -4,6 +4,13 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 import "./Token.sol";
 
+/*We are putting a interface here, because later inside flashloan function
+we want to make sure all msg.sender of that function, will have receiveTokens
+function inside their contract as shown in the interface. */
+interface IReceiver {
+    function receiveTokens(address tokenAddress, uint amount) external;
+}
+
 
 //this is flashloan pool contract. In reality, you wont need this, because
 //pools and their token address will be readily available by dexes.
@@ -62,12 +69,20 @@ contract FlashLoan {
         poolBalance = poolBalance + _amount;
     }
 
+    //When receiver will call this function, this function 
+    //should do 3 things: send tokens to receiver, get paid back
+    // and ensure loan is paid back
     function flashLoan(uint _borrowAmount) external {
         //here the receiver will call this function. This function in return will
         //call transfer function which is a ERC20 function. 
         //Approved contract (Pool contract) can transfer tokens to another contract.
         token.transfer(msg.sender, _borrowAmount);
+        IReceiver(msg.sender).receiveTokens(address(token), _borrowAmount); 
     }
+    /*Inside the upper function, first the receiver has called this function,
+    then pool contract has called "receiveTokens" function on the contract of 
+    receiver.
+     */
 
 
 }

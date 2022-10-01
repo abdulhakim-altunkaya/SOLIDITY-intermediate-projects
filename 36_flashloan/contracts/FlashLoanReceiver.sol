@@ -30,6 +30,10 @@ contract FlashLoanReceiver {
         owner = msg.sender;
     }
 
+    function receiveTokens(address _tokenAddress, uint _amount) external {
+        return;
+    }
+
     //3.step
     function executeFlashLoan(uint _amount) external onlyOwner {
         pool.flashLoan(_amount);
