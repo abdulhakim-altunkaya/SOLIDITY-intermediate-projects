@@ -24,7 +24,7 @@ contract FlashLoan {
 
     Token public token;
 
-    //this is to track pool balance.
+    //this is to track pool balance. It will later return address(this).balance
     uint public poolBalance;
 
     constructor(address _tokenAddress){
