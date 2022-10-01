@@ -33,10 +33,26 @@ contract FlashLoan {
 
     /*this is a great function. It shows to to deposit erc20 tokens inside any contract.
     transferFrom is a special function for ERC20 and ERC721 contract.
-    This function resides in Receiver contract(aka Pool contract).
     To call this function, you will first need to approve this pool contract.
-    The approve function will reside in Token contract. There it will receive 2 parameters:
+     Function will receive 2 parameters:
         pool adress and amount of tokens. For amount enter 1000000
+    
+    The approve function must be in Token contract. 
+    If inside Token contract and if there is no inheritance, then write it full:
+        function approve(address _spender, uint256 _value) public returns(bool success) {
+            require(_spender != address(0));
+            allowance[msg.sender][_spender] = _value;
+            emit Approval(msg.sender, _spender, _value);
+            return true;
+        }
+    If inside Token contract and if there is inheritance, then write it like this:
+    function approvePool(address _spender, uint _value) external {
+        approve(_spender, uint _value);
+    }
+
+    If inside the Pool contract and no inheritance:
+
+    
     */
     function depositTokens(uint _amount) external  {
         require(_amount > 0, "you must deposit more than 0");
