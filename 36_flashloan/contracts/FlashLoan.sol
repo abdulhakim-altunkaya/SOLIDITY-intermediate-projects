@@ -31,9 +31,13 @@ contract FlashLoan {
         token = Token(_tokenAddress);
     }
 
-    //this is a great function. It shows to to deposit erc20 tokens inside any contract.
-    //I need to check if we will need to approve this contract before transferring.
-    // Also search for call option. 
+    /*this is a great function. It shows to to deposit erc20 tokens inside any contract.
+    transferFrom is a special function for ERC20 and ERC721 contract.
+    This function resides in Receiver contract(aka Pool contract).
+    To call this function, you will first need to approve this pool contract.
+    The approve function will reside in Token contract. There it will receive 2 parameters:
+        pool adress and amount of tokens. For amount enter 1000000
+    */
     function depositTokens(uint _amount) external  {
         require(_amount > 0, "you must deposit more than 0");
         token.transferFrom(msg.sender, address(this), _amount);
