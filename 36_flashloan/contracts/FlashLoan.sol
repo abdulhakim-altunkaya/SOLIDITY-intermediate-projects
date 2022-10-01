@@ -50,18 +50,23 @@ contract FlashLoan {
         approve(_spender, uint _value);
     }
 
-    If inside the Pool contract and no inheritance:
-
+    transferFrom resides in Pool contract
+    approve resides in Token contract
     
     */
     function depositTokens(uint _amount) external  {
         require(_amount > 0, "you must deposit more than 0");
         token.transferFrom(msg.sender, address(this), _amount);
+        //instead of this line below, I can say
+        //poolBalance = address(this).balance;
         poolBalance = poolBalance + _amount;
     }
 
-    function flashloan(uint _borrowAmount) external {
-
+    function flashLoan(uint _borrowAmount) external {
+        //here the receiver will call this function. This function in return will
+        //call transfer function which is a ERC20 function. 
+        //Approved contract (Pool contract) can transfer tokens to another contract.
+        token.transfer(msg.sender, _borrowAmount);
     }
 
 
