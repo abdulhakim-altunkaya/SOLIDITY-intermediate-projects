@@ -73,6 +73,9 @@ contract FlashLoan {
     //should do 3 things: send tokens to receiver, get paid back
     // and ensure loan is paid back
     function flashLoan(uint _borrowAmount) external {
+        require(_borrowAmount > 0, "borrow amount cannot be zero");
+        uint balanceBefore = token.balanceOf(address(this));
+        require(balanceBefore >= _borrowAmount, "not enough funds in pool");
         //here the receiver will call this function. This function in return will
         //call transfer function which is a ERC20 function. 
         //Approved contract (Pool contract) can transfer tokens to another contract.

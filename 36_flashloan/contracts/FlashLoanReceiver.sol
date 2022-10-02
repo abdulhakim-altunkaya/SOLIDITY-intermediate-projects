@@ -34,7 +34,7 @@ contract FlashLoanReceiver {
 
     //only the pool can call this function after sending tokens to the receiver
     function receiveTokens(address _tokenAddress, uint _amount) external {
-        require(msg.sender == address(pool), "sender must be pool");
+        require(msg.sender == address(pool), "only pool can call this function");
         require(Token(_tokenAddress).balanceOf(address(this)) == _amount, "receiveTokens function");
         emit LoanReceived(_tokenAddress, _amount);
     }
