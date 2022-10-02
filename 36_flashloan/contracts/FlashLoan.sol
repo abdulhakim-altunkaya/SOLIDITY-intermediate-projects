@@ -28,7 +28,7 @@ import "./Token.sol";
         token = Token(_tokenAddress);
     }
  */
-contract FlashLoan {
+contract FlashLoan is ReentrancyGuard {
 
     Token public token;
 
@@ -62,7 +62,7 @@ contract FlashLoan {
     approve resides in Token contract
     
     */
-    function depositTokens(uint _amount) external  {
+    function depositTokens(uint _amount) external nonReentrant {
         require(_amount > 0, "you must deposit more than 0");
         token.transferFrom(msg.sender, address(this), _amount);
         //instead of this line below, I can say
@@ -71,7 +71,7 @@ contract FlashLoan {
     }
 
     //send tokens to receiver, get paid back, ensure loan is paid back
-    function flashLoan(uint _borrowAmount) external {
+    function flashLoan(uint _borrowAmount) external nonReentrant {
         require(_borrowAmount > 0, "borrow amount cannot be zero");
         uint balanceBefore = token.balanceOf(address(this));
         require(balanceBefore >= _borrowAmount, "not enough funds in pool");
