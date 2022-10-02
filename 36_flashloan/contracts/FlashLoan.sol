@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import "hardhat/console.sol";
 import "./Token.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 /*We are putting a interface here, because later inside flashloan function
 we want to make sure all msg.sender of that function, will have receiveTokens
@@ -69,23 +70,22 @@ contract FlashLoan {
         poolBalance = poolBalance + _amount;
     }
 
-    //When receiver will call this function, this function 
-    //should do 3 things: send tokens to receiver, get paid back
-    // and ensure loan is paid back
+    //send tokens to receiver, get paid back, ensure loan is paid back
     function flashLoan(uint _borrowAmount) external {
         require(_borrowAmount > 0, "borrow amount cannot be zero");
         uint balanceBefore = token.balanceOf(address(this));
         require(balanceBefore >= _borrowAmount, "not enough funds in pool");
-        //here the receiver will call this function. This function in return will
-        //call transfer function which is a ERC20 function. 
-        //Approved contract (Pool contract) can transfer tokens to another contract.
+        //Just to make sure pool is working and has funds
+        assert(poolBalance == balanceBefore);
+        //Pool transfers tokens to another contract.
         token.transfer(msg.sender, _borrowAmount);
+        //Receiver uses the funds
+        //Later Pool is calling this function on Receiver to get money back
         IReceiver(msg.sender).receiveTokens(address(token), _borrowAmount); 
+        //ensure the loan is paid back
+        uint balanceAfter = token.balanceOf(address(this));
+        require(balanceAfter >= balanceBefore, "money is not paid back");
     }
-    /*Inside the upper function, first the receiver has called this function,
-    then pool contract has called "receiveTokens" function on the contract of 
-    receiver.
-     */
 
 
 }

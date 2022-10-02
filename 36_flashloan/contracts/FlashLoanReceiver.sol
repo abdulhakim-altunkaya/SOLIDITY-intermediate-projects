@@ -37,6 +37,11 @@ contract FlashLoanReceiver {
         require(msg.sender == address(pool), "only pool can call this function");
         require(Token(_tokenAddress).balanceOf(address(this)) == _amount, "receiveTokens function");
         emit LoanReceived(_tokenAddress, _amount);
+
+        // do stuff with the money
+
+        // return funds to the pool
+        require(Token(_tokenAddress).transfer(msg.sender, _amount), "transfer funds back");
     }
 
     //3.step
