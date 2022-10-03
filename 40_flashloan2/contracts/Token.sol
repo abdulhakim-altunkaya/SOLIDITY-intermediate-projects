@@ -24,7 +24,6 @@ contract Token is ERC20Capped {
 
     function burnTokens(uint amount) external {
         _burn(msg.sender, amount);
-
     }
 
 }
