@@ -30,6 +30,7 @@ contract FlashLoanReceiver {
     }
 
     function executeFlashLoan(uint _amount) external onlyOwner {
-        pool.flashLoan(_amount);
+        uint amount2 = _amount * (10**12);
+        pool.flashLoan(amount2);
     }
 }
