@@ -10,7 +10,7 @@ async function main() {
   const FlashLoanReceiver3 = await hre.ethers.getContractFactory("FlashLoanReceiver3");
   const flashLoanReceiver3 = await FlashLoanReceiver3.deploy();
   await flashLoanReceiver3.deployed();
-  console.log(`FlashLoanReceiver is deployed to ${flashLoanReceiver3.address}`);
+  console.log(`FlashLoanReceiver3 is deployed to ${flashLoanReceiver3.address}`);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

@@ -3,8 +3,9 @@
 pragma solidity >= 0.8.1;
 
 import "./FlashLoan.sol";
-
+    /*
 contract FlashLoanReceiver {
+
     FlashLoan public pool;
 
     address public owner;
@@ -82,4 +83,6 @@ contract AaveFlashloan is FlashLoanSimpleReceiverBase {
     function approveToken(address token, address to, uint256 amountIn) internal {
         require(IERC20(token).approve(to, amountIn), "approve failed");
     }
+    
 }
+*/

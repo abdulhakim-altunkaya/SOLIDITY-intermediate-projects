@@ -5,7 +5,7 @@ pragma solidity >= 0.8.1;
 import "./FlashLoan.sol";
 import "./IERC20.sol";
 
-contract FlashLoanReceiver {
+contract FlashLoanReceiver3 {
     FlashLoan public pool;
 
     event LoanReceived(address token, uint amount);
