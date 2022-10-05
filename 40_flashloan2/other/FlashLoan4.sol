@@ -1,3 +1,4 @@
+/*
 // SPDX-License-Identifier: MIT
 
 pragma solidity >= 0.8.1;
@@ -6,8 +7,8 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "./Token.sol";
 import "./IERC20.sol";
 
-/*This is to make sure all msg.sender of flashloan function, will have receiveTokens
-function inside their contract as shown in the interface. */
+//This is to make sure all msg.sender of flashloan function, will have receiveTokens
+//function inside their contract as shown in the interface.
 interface IReceiver {
     function receiveTokens(address tokenAddress, uint amount) external;
 }
@@ -58,3 +59,4 @@ contract FlashLoan is ReentrancyGuard {
 }
 
 
+*/
