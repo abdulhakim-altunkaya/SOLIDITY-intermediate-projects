@@ -27,12 +27,3 @@ contract FlashLoanReceiver3 {
         pool.flashLoan(_amount);
     }
 }
-
-    function executeOperation(address asset, uint256 amount, uint256 premium, address, bytes memory) public override returns (bool) {
-        require( amount <= IERC20(asset).balanceOf(address(this)), "Invalid balance");
-        // pay back the loan amount and the premium (flashloan fee)
-        uint256 amountToReturn = amount.add(premium);
-        require(IERC20(asset).balanceOf(address(this)) >= amountToReturn, "Not enough amount to return loan");
-        approveToken(asset, address(POOL), amountToReturn);
-        return true;
-    }
