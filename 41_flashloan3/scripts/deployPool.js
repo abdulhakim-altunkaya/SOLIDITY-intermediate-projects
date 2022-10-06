@@ -7,12 +7,12 @@
 const hre = require("hardhat");
 
 async function main() {
-  const Token = await hre.ethers.getContractFactory("Token");
-  const token = await Token.deploy(3000000);
+  const Pool = await hre.ethers.getContractFactory("Pool");
+  const pool = await Pool.deploy();
 
-  await token.deployed();
+  await pool.deployed();
 
-  console.log(`hi sir token deployed to ${token.address}`);
+  console.log(`hi sir token deployed to ${pool.address}`);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

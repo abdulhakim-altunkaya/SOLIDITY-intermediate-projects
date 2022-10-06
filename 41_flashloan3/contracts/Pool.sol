@@ -7,7 +7,7 @@ import "./Token.sol";
 
 /*This is to make sure all msg.sender of flashloan function, will have receiveTokens
 function inside their contract as shown in the interface. */
-interface IReceiver {
+interface IUniswapV2Callee {
     function uniswapV2Call(address tokenAddress, uint amount) external;
 }
 
@@ -19,14 +19,14 @@ interface IReceiver {
 //then first approve Pool contract and then send 1000000 token to Pool contract by using
 //the depositTokens function below.
 
-contract FlashLoan4 is ReentrancyGuard {
+contract Pool is ReentrancyGuard {
     Token public token;
 
     //To keep tranck of poolBalance.
     uint public poolBalance;
 
     constructor(){
-        token = Token(0x05714B0c537E685dbe4E5Cda1E6CA934e40c0588);
+        token = Token(0x93CEa63cAE1926aAa19C081ae3027B00AE74C87D);
     }
 
     function depositTokens(uint _amount) external nonReentrant {
@@ -37,7 +37,7 @@ contract FlashLoan4 is ReentrancyGuard {
     }
 
     //send tokens to Receiver, then request it back
-    function flashLoan(uint _borrowAmount) external nonReentrant {
+    function swap(uint _borrowAmount) external nonReentrant {
         require(_borrowAmount > 0, "borrow amount cannot be 0");
         uint balanceBefore = token.balanceOf(address(this));
         require(balanceBefore >= _borrowAmount, "not enough funds");
@@ -47,7 +47,7 @@ contract FlashLoan4 is ReentrancyGuard {
         token.transfer(msg.sender, _borrowAmount);
         //Receiver uses the funds
         //Later pool is requesting the loan back
-        IReceiver(msg.sender).receiveTokens(address(token), _borrowAmount);
+        IUniswapV2Callee(msg.sender).uniswapV2Call(address(token), _borrowAmount);
         //ensuring the loan is paid back
         uint balanceAfter = token.balanceOf(address(this));
         require(balanceAfter >= balanceBefore, "loan is not paid back");

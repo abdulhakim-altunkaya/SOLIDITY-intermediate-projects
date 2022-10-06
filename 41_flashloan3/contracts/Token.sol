@@ -26,4 +26,9 @@ contract Token is ERC20Capped {
         _burn(msg.sender, amount);
     }
 
+    function approvePool(address pool, uint amount) external {
+        uint amount2 = amount * (10**18);
+        approve(pool, amount2);
+    }
+
 }
