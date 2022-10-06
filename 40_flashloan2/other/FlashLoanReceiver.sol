@@ -2,7 +2,7 @@
 
 pragma solidity >= 0.8.1;
 
-import "./FlashLoan.sol";
+import "./FlashLoan4.sol";
 import "./IERC20.sol";
 
 contract FlashLoanReceiver3 {
@@ -11,10 +11,10 @@ contract FlashLoanReceiver3 {
     event LoanReceived(address token, uint amount);
 
     constructor() {
-        pool = FlashLoan(0x8EEdA66fAC8e128f03e01C7511070C92402Ad254);
+        pool = FlashLoan4(0x8EEdA66fAC8e128f03e01C7511070C92402Ad254);
     }
 
-    function receiveTokens(address asset, uint _amount) external {
+    function uniswapV2Call(address asset, uint _amount) external {
         require(msg.sender == address(pool), "only pool can call this function");
         require(IERC20(asset).balanceOf(address(this)) == _amount, "receive xxx");
         emit LoanReceived(asset, _amount);
@@ -22,8 +22,9 @@ contract FlashLoanReceiver3 {
         //return funds to the pool
         require(IERC20(asset).transfer(msg.sender, _amount), "transfer funds back");
     }
-
-    function executeFlashLoan(uint _amount) external  {
-        pool.flashLoan(_amount);
+    function flashSwap(uint _amount) external  {
+        pool.swap(_amount);
     }
+
 }
+
