@@ -19,7 +19,11 @@ contract PairFlash is IUniswapV3FlashCallback, PeripheryImmutableState, Peripher
     using LowGasSafeMath for int256;
 
     ISwapRouter public immutable swapRouter;
-
+    //swaprouter address:   0xE592427A0AEce92De3Edee1F18E0157C05861564
+    //Fctory:               0x1F98431c8aD98523631AE4a59f267346ea31F984
+    //weth9 - goerli:       0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6
+    //weth9-matic:          0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889
+    //dai-goerli            0x9D233A907E065855D2A9c7d4B552ea27fB2E5a36
     constructor(
         ISwapRouter _swapRouter,
         address _factory,
