@@ -27,8 +27,8 @@ describe("swap single input and output", function () {
       weth = await ethers.getContractAt("IWETH", WETH9);
       dai = await ethers.getContractAt("IDAI", DAI);
       usdc = await ethers.getContractAt("IUSDC", USDC);
-      usdt = await ethers.getContractAt("IUSDT", USDT);
       matic = await ethers.getContractAt("IMATIC", MATIC);
+      usdt = await ethers.getContractAt("IUSDT", USDT);
       const SwapExamples = await ethers.getContractFactory("SwapExamples");
       swapExamples = await SwapExamples.deploy();
       await swapExamples.deployed();
@@ -49,7 +49,27 @@ describe("swap single input and output", function () {
       await weth.connect(account).approve(swapExamples.address, amountIn);
       await swapExamples.exactInputUSDC(amountIn);
       console.log("USDC Balance", await usdc.balanceOf(account.address));
+    });
+    //Swap 100 Matic to USDT
+    it("swap exact 100 Matic to usdT", async () => {
+      const amountIn = 100n * 10n ** 18n;
+      await matic.connect(account).deposit({ value: amountIn });
+      await matic.connect(account).approve(swapExamples.address, amountIn);
+      await swapExamples.exactInputUSDT(amountIn);
+      console.log("USDT Balance", await usdt.balanceOf(account.address));
+      console.log("USDT Balance", await matic.balanceOf(account.address));
     })
+    //swap 10 weth to matic
+    it("swap exact 100 weth to matic", async function () {
+      const amountIn = 100n * 10n ** 18n; //this means 10 eth
+      await weth.connect(account).deposit({value: amountIn});
+      await weth.connect(account).approve(swapExamples.address, amountIn);
+      await swapExamples.exactInputMATIC(amountIn);
+      const maticBalance = await matic.balanceOf(account.address);
+      const maticBalance2 = await maticBalance.toString();
+      const maticBalance3 = await maticBalance2.slice(0, -18);
+      console.log("MATIC Balance", maticBalance3);
+    });
     //here we want exact daiAmountOut dai (100). It will convert max eth amount (wethAmountInMax) to exact dai amount (daiAmountOut)
     it("Swap max 1 weth to exact 100 dai", async () => {
       const wethAmountInMax = 10n**18n;//this means 1 weth
@@ -69,25 +89,18 @@ describe("swap single input and output", function () {
       console.log("WETH Balance (after removing 18 zeros)", wethBalance3);
       console.log("WETH Balance: ", wethBalance);
     });
+  /*
     //It will convert max usdt amount (wethAmountInMax) to exact matic amount (daiAmountOut)
-    it("Swap max 1 weth to exact 100 dai", async () => {
-      const usdtAmountInMax = 10n**18n;//this means 1 weth
-      const maticAmountOut = 100n*10n**18n; // this means 100 dai
-      await matic.connect(account).deposit({ value: usdtAmountInMax });
-      await matic.connect(account).approve(swapExamples.address, usdtAmountInMax);
-      await swapExamples.swapExactOutputSingle(maticAmountOut, usdtAmountInMax);
-
-      const usdtBalance = await usdt.balanceOf(account.address);
-      const usdtBalance2 = await usdtBalance.toString();
-      const usdtBalance3 = await usdtBalance2.slice(0, -18);
-      console.log("USDT Balance: ", usdtBalance3);
-
-      const wethBalance = await weth.balanceOf(account.address);
-      const wethBalance2 = await wethBalance.toString();
-      const wethBalance3 = await wethBalance2.slice(0, -18);
-      console.log("WETH Balance (after removing 18 zeros)", wethBalance3);
-      console.log("WETH Balance: ", wethBalance);
+    it("Swap max 1000 usdt weth to exact 100 Matic", async () => {
+      const usdtAmountInMax = 1000n * 10n**18n;//this means 1000 usdt
+      const maticAmountOut = 100n*10n**18n; // this means 100 matic
+      await usdt.connect(account).deposit({ value: usdtAmountInMax });
+      await usdt.connect(account).approve(swapExamples.address, usdtAmountInMax);
+      await swapExamples.exactOutputMatic(maticAmountOut, usdtAmountInMax);
+      const maticBalance = await matic.balanceOf(account.address);
+      console.log("MATIC Balance: ", maticBalance);
     });
 
+*/
     
 });

@@ -13,7 +13,8 @@ contract SwapExamples {
     address public constant USDC = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
     //POLYGON:  address public constant ETH = 0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619;
     // POLYGON: address public constant USDC = 0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174;
-    address public constant WMATIC = 0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889;
+    address public constant MATIC = 0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0;
+    address public constant USDT = 0xdAC17F958D2ee523a2206206994597C13D831ec7;
 
     // For this example, we will set the pool fee to 0.3%.
     uint24 public constant poolFee = 3000;
@@ -65,6 +66,44 @@ contract SwapExamples {
         amountOut = swapRouter.exactInputSingle(params);
     } 
 
+    //Convert exact 1 weth to USDT
+    //this will give error because .connect function only works with WETH9. 
+    //I dont know why thats how it is.
+    function exactInputUSDT(uint amountIn) external returns(uint amountOut) {
+        TransferHelper.safeTransferFrom(MATIC, msg.sender, address(this), amountIn);
+        TransferHelper.safeApprove(MATIC, address(swapRouter), amountIn);
+        ISwapRouter.ExactInputSingleParams memory params = ISwapRouter.ExactInputSingleParams({
+            tokenIn: MATIC,
+            tokenOut: USDT,
+            fee: poolFee,
+            recipient: msg.sender,
+            deadline: block.timestamp,
+            amountIn: amountIn,
+            amountOutMinimum: 0,
+            sqrtPriceLimitX96: 0
+        });
+        // The call to `exactInputSingle` executes the swap.
+        amountOut = swapRouter.exactInputSingle(params);
+    } 
+
+    //Convert exact 10 weth to matic
+    function exactInputMATIC(uint amountIn) external returns(uint amountOut) {
+        TransferHelper.safeTransferFrom(WETH9, msg.sender, address(this), amountIn);
+        TransferHelper.safeApprove(WETH9, address(swapRouter), amountIn);
+        ISwapRouter.ExactInputSingleParams memory params = ISwapRouter.ExactInputSingleParams({
+            tokenIn: WETH9,
+            tokenOut: MATIC,
+            fee: poolFee,
+            recipient: msg.sender,
+            deadline: block.timestamp,
+            amountIn: amountIn,
+            amountOutMinimum: 0,
+            sqrtPriceLimitX96: 0
+        });
+        // The call to `exactInputSingle` executes the swap.
+        amountOut = swapRouter.exactInputSingle(params);
+    } 
+
 
 
     /*swapExactOutputSingle swaps a minimum possible amount of WETH for a fixed amount of DAI.
@@ -95,27 +134,31 @@ contract SwapExamples {
         // If the actual amount spent (amountIn) is less than the specified maximum amount, we must refund the msg.sender and approve the swapRouter to spend 0.
         if (amountIn < amountInMaximum) {
             TransferHelper.safeApprove(WETH9, address(swapRouter), 0);
+            //transfer remaining weth9 to msg.sender
             TransferHelper.safeTransfer(WETH9, msg.sender, amountInMaximum - amountIn);
         }
     }
-    /*
-    //Convert exact 1 WMATIC to USDC
-    function exactInputWMATIC(uint amountIn) external returns(uint amountOut) {
-        TransferHelper.safeTransferFrom(ETH, msg.sender, address(this), amountIn);
-        TransferHelper.safeApprove(ETH, address(swapRouter), amountIn);
-        ISwapRouter.ExactInputSingleParams memory params = ISwapRouter.ExactInputSingleParams({
-            tokenIn: ETH,
-            tokenOut: USDC,
+
+    //convert usdt to exact 1000 matic
+    function exactOutputMatic(uint amountOut, uint amountInMaximum) external returns(uint amountIn) {
+        TransferHelper.safeTransferFrom(USDT, msg.sender, address(this), amountInMaximum);
+        TransferHelper.safeApprove(USDT, address(swapRouter), amountInMaximum);
+        ISwapRouter.ExactOutputSingleParams memory params = ISwapRouter.ExactOutputSingleParams({
+            tokenIn: USDT,
+            tokenOut: MATIC,
             fee: poolFee,
             recipient: msg.sender,
             deadline: block.timestamp,
-            amountIn: amountIn,
-            amountOutMinimum: 0,
+            amountOut: amountOut,
+            amountInMaximum: amountInMaximum,
             sqrtPriceLimitX96: 0
         });
-        // The call to `exactInputSingle` executes the swap.
-        amountOut = swapRouter.exactInputSingle(params);
+        amountIn = swapRouter.exactOutputSingle(params);
+        if(amountIn < amountInMaximum) {
+            TransferHelper.safeApprove(USDT, address(swapRouter), 0);
+            TransferHelper.safeTransfer(USDT, msg.sender, amountInMaximum - amountIn);
+        }
     }
-    */
+
 
 }
