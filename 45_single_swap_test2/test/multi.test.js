@@ -9,7 +9,7 @@ const USDT = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
 
 
 
-describe("swap multi hop exact input", function () {
+describe("swap multi hop trades", function () {
 
     let account;
     let dai;
@@ -35,18 +35,32 @@ describe("swap multi hop exact input", function () {
     });
 
     //swap 1 weth to dai
-    it("swap exact 1 weth to usdc and then to dai", async function () {
-      const amountIn = 10n ** 18n; //this means 1 eth
-      await weth.connect(account).deposit({value: amountIn});
-      await weth.connect(account).approve(swapMulti.address, amountIn);
-      await swapMulti.swapExactInputMultihop(amountIn);
+    it("MULTI-EXACT-INPUT: swap exact 1 weth to usdc and then to dai", async function () {
+        const amountIn = 10n ** 18n; //this means 1 eth
+        await weth.connect(account).deposit({value: amountIn});
+        await weth.connect(account).approve(swapMulti.address, amountIn);
+        await swapMulti.swapExactInputMultihop(amountIn);
 
-      console.log("USDC Balance", await usdc.balanceOf(account.address));
-      console.log("WETH Balance", await weth.balanceOf(account.address));
-      const daiBalance1 = await dai.balanceOf(account.address);
-      const daiBalance2 = daiBalance1.toString();
-      const daiBalance3 = daiBalance2.slice(0, -18);
-      console.log("DAI Balance", daiBalance3);
+        console.log("USDC Balance", await usdc.balanceOf(account.address));
+        console.log("WETH Balance", await weth.balanceOf(account.address));
+        const daiBalance1 = await dai.balanceOf(account.address);
+        const daiBalance2 = daiBalance1.toString();
+        const daiBalance3 = daiBalance2.slice(0, -18);
+        console.log("DAI Balance", daiBalance3);
     });
+
+    it("MULTI-EXACT-OUTPUT: swap weth to usdc and then to exact 1000 dai", async () => {
+        const wethAmountInMax = 10n**18n; // max 1 weth we can spend
+        const daiAmount = 1000n*10n**18n;
+        await weth.connect(account).deposit({ value: wethAmountInMax });
+        await weth.connect(account).approve(swapMulti.address, wethAmountInMax);
+        await swapMulti.swapExactOutputMultihop(daiAmount, wethAmountInMax);
+        console.log("USDC Balance", await usdc.balanceOf(account.address));
+        console.log("WETH Balance", await weth.balanceOf(account.address));
+        const daiBalance1 = await dai.balanceOf(account.address);
+        const daiBalance2 = daiBalance1.toString();
+        const daiBalance3 = daiBalance2.slice(0, -18);
+        console.log(`Your Dai Balance is: ${daiBalance3}`);
+    })
     
 });
