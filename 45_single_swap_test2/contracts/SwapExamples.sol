@@ -11,6 +11,9 @@ contract SwapExamples {
     address public constant DAI = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
     address public constant WETH9 = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
     address public constant USDC = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
+    //POLYGON:  address public constant ETH = 0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619;
+    // POLYGON: address public constant USDC = 0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174;
+    address public constant WMATIC = 0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889;
 
     // For this example, we will set the pool fee to 0.3%.
     uint24 public constant poolFee = 3000;
@@ -43,6 +46,8 @@ contract SwapExamples {
         // The call to `exactInputSingle` executes the swap.
         amountOut = swapRouter.exactInputSingle(params);
     }
+
+    //Convert exact 1 weth to USDC
     function exactInputUSDC(uint amountIn) external returns(uint amountOut) {
         TransferHelper.safeTransferFrom(WETH9, msg.sender, address(this), amountIn);
         TransferHelper.safeApprove(WETH9, address(swapRouter), amountIn);
@@ -59,6 +64,8 @@ contract SwapExamples {
         // The call to `exactInputSingle` executes the swap.
         amountOut = swapRouter.exactInputSingle(params);
     } 
+
+
 
     /*swapExactOutputSingle swaps a minimum possible amount of WETH for a fixed amount of DAI.
     The calling address must approve this contract to spend its WETH for this function to succeed. As the amount of input DAI is variable,
@@ -91,5 +98,24 @@ contract SwapExamples {
             TransferHelper.safeTransfer(WETH9, msg.sender, amountInMaximum - amountIn);
         }
     }
+    /*
+    //Convert exact 1 WMATIC to USDC
+    function exactInputWMATIC(uint amountIn) external returns(uint amountOut) {
+        TransferHelper.safeTransferFrom(ETH, msg.sender, address(this), amountIn);
+        TransferHelper.safeApprove(ETH, address(swapRouter), amountIn);
+        ISwapRouter.ExactInputSingleParams memory params = ISwapRouter.ExactInputSingleParams({
+            tokenIn: ETH,
+            tokenOut: USDC,
+            fee: poolFee,
+            recipient: msg.sender,
+            deadline: block.timestamp,
+            amountIn: amountIn,
+            amountOutMinimum: 0,
+            sqrtPriceLimitX96: 0
+        });
+        // The call to `exactInputSingle` executes the swap.
+        amountOut = swapRouter.exactInputSingle(params);
+    }
+    */
 
 }
