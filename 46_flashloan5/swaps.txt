@@ -1,0 +1,230 @@
+
+SINGLE SWAPS
+
+1) npm init -y
+2) npm install hardhat
+3) npm install @uniswap/v3-periphery @uniswap/v3-core
+4) npx hardhat
+5) npm install @nomicfoundation/hardhat-toolbox
+
+6) Copy paste this into hardhat.config.js:
+require("@nomicfoundation/hardhat-toolbox");
+
+/** @type import('hardhat/config').HardhatUserConfig */
+module.exports = {
+  solidity: "0.7.6",
+  networks: {
+    hardhat: {
+      forking: {
+        url: "https://eth-mainnet.g.alchemy.com/v2/4X4MaNu5qcNpwsNw-ryjGgRmrCuH0tpL"
+      },
+    },
+  },
+};
+
+7) Copy paste all the code from uniswap and paste it inside the contracts folder.
+8) Create an interface folder and put inside "IWETH" file.
+9) Create a test file and put inside the test folder.
+10) npx hardhat test
+
+
+********************
+********************
+********************
+****UNISWAP CODE****
+********************
+********************
+
+// SPDX-License-Identifier: GPL-2.0-or-later
+pragma solidity >=0.7.6;
+pragma abicoder v2;
+
+import '@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol';
+import '@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol';
+
+contract SwapExamples {
+    // For the scope of these swap examples,
+    // we will detail the design considerations when using
+    // `exactInput`, `exactInputSingle`, `exactOutput`, and  `exactOutputSingle`.
+
+    // It should be noted that for the sake of these examples, we purposefully pass in the swap router instead of inherit the swap router for simplicity.
+    // More advanced example contracts will detail how to inherit the swap router safely.
+
+    ISwapRouter public constant swapRouter = ISwapRouter(0xE592427A0AEce92De3Edee1F18E0157C05861564);
+
+    // This example swaps DAI/WETH9 for single path swaps and DAI/USDC/WETH9 for multi path swaps.
+
+    address public constant DAI = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
+    address public constant WETH9 = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
+    address public constant USDC = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
+
+    // For this example, we will set the pool fee to 0.3%.
+    uint24 public constant poolFee = 3000;
+
+    /// @notice swapExactInputSingle swaps a fixed amount of DAI for a maximum possible amount of WETH9
+    /// using the DAI/WETH9 0.3% pool by calling `exactInputSingle` in the swap router.
+    /// @dev The calling address must approve this contract to spend at least `amountIn` worth of its DAI for this function to succeed.
+    /// @param amountIn The exact amount of DAI that will be swapped for WETH9.
+    /// @return amountOut The amount of WETH9 received.
+    function swapExactInputSingle(uint256 amountIn) external returns (uint256 amountOut) {
+        // msg.sender must approve this contract
+
+        // Transfer the specified amount of DAI to this contract.
+        TransferHelper.safeTransferFrom(WETH9, msg.sender, address(this), amountIn);
+
+        // Approve the router to spend DAI.
+        TransferHelper.safeApprove(WETH9, address(swapRouter), amountIn);
+
+        // Naively set amountOutMinimum to 0. In production, use an oracle or other data source to choose a safer value for amountOutMinimum.
+        // We also set the sqrtPriceLimitx96 to be 0 to ensure we swap our exact input amount.
+        ISwapRouter.ExactInputSingleParams memory params =
+            ISwapRouter.ExactInputSingleParams({
+                tokenIn: WETH9,
+                tokenOut: DAI,
+                fee: poolFee,
+                recipient: msg.sender,
+                deadline: block.timestamp,
+                amountIn: amountIn,
+                amountOutMinimum: 0,
+                sqrtPriceLimitX96: 0
+            });
+
+        // The call to `exactInputSingle` executes the swap.
+        amountOut = swapRouter.exactInputSingle(params);
+    }
+
+    /// @notice swapExactOutputSingle swaps a minimum possible amount of DAI for a fixed amount of WETH.
+    /// @dev The calling address must approve this contract to spend its DAI for this function to succeed. As the amount of input DAI is variable,
+    /// the calling address will need to approve for a slightly higher amount, anticipating some variance.
+    /// @param amountOut The exact amount of WETH9 to receive from the swap.
+    /// @param amountInMaximum The amount of DAI we are willing to spend to receive the specified amount of WETH9.
+    /// @return amountIn The amount of DAI actually spent in the swap.
+    function swapExactOutputSingle(uint256 amountOut, uint256 amountInMaximum) external returns (uint256 amountIn) {
+        // Transfer the specified amount of DAI to this contract.
+        TransferHelper.safeTransferFrom(WETH9, msg.sender, address(this), amountInMaximum);
+
+        // Approve the router to spend the specifed `amountInMaximum` of DAI.
+        // In production, you should choose the maximum amount to spend based on oracles or other data sources to acheive a better swap.
+        TransferHelper.safeApprove(WETH9, address(swapRouter), amountInMaximum);
+
+        ISwapRouter.ExactOutputSingleParams memory params =
+            ISwapRouter.ExactOutputSingleParams({
+                tokenIn: WETH9,
+                tokenOut: DAI,
+                fee: poolFee,
+                recipient: msg.sender,
+                deadline: block.timestamp,
+                amountOut: amountOut,
+                amountInMaximum: amountInMaximum,
+                sqrtPriceLimitX96: 0
+            });
+
+        // Executes the swap returning the amountIn needed to spend to receive the desired amountOut.
+        amountIn = swapRouter.exactOutputSingle(params);
+
+        // For exact output swaps, the amountInMaximum may not have all been spent.
+        // If the actual amount spent (amountIn) is less than the specified maximum amount, we must refund the msg.sender and approve the swapRouter to spend 0.
+        if (amountIn < amountInMaximum) {
+            TransferHelper.safeApprove(WETH9, address(swapRouter), 0);
+            TransferHelper.safeTransfer(WETH9, msg.sender, amountInMaximum - amountIn);
+        }
+    }
+}
+
+********************
+********************
+********************
+********************
+***INTERFACE********
+********************
+********************
+********************
+
+// SPDX-License-Identifier: GPL-2.0-or-later
+pragma solidity >=0.7.6;
+
+interface IWETH {
+    function deposit() external payable;
+
+    function withdraw(uint) external;
+
+    function totalSupply() external view returns (uint);
+
+    function balanceOf(address account) external view returns (uint);
+
+    function transfer(address recipient, uint amount) external returns (bool);
+
+    function allowance(address owner, address spender)
+        external
+        view
+        returns (uint);
+
+    function approve(address spender, uint amount) external returns (bool);
+
+    function transferFrom(
+        address sender,
+        address recipient,
+        uint amount
+    ) external returns (bool);
+
+    event Transfer(address indexed from, address indexed to, uint value);
+    event Approval(address indexed owner, address indexed spender, uint value);
+}
+
+
+********************
+********************
+********************
+********************
+***TEST FILE********
+********************
+********************
+********************
+
+const { expect } = require("chai");
+const { ethers } = require("hardhat");
+
+const DAI = "0x6B175474E89094C44Da98b954EedeAC495271d0F";
+const WETH9 = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
+const USDC = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
+
+
+describe("SwapExamples", function () {
+    let accounts;
+    let dai;
+    let weth;
+    let swapExamples;
+    before( async () => {
+        //get metamask account
+        accounts = await ethers.getSigners();
+        //initialize the token contracts
+        weth = await ethers.getContractAt("IWETH", WETH9);
+        dai = await ethers.getContractAt("IERC20", DAI);
+        const SwapExamples = await ethers.getContractFactory("SwapExamples");
+        swapExamples = await SwapExamples.deploy();
+        await swapExamples.deployed();
+
+    })
+    /*
+    //here are converting 1 eth to dai
+    it("SwapExactInputSingle", async function () {
+
+        const amountIn = 10n ** 18n; //this means 1 eth
+        await weth.connect(accounts[0]).deposit({value: amountIn});
+        await weth.connect(accounts[0]).approve(swapExamples.address, amountIn);
+
+        await swapExamples.swapExactInputSingle(amountIn);
+        console.log("DAI Balance", await dai.balanceOf(accounts[0].address));
+    });
+    */
+   //here we want exact daiAmountOut dai. It will convert max eth amount (wethAmountInMax) to exact dai amount (daiAmountOut)
+    it("SwapExactOutputSingle", async function () {
+        const wethAmountInMax = 10n ** 18n; // this means 1 ether
+        const daiAmountOut = 100n * 10n**18n;
+        await weth.connect(accounts[0]).deposit({value: wethAmountInMax});
+        await weth.connect(accounts[0]).approve(swapExamples.address, wethAmountInMax);
+
+        await swapExamples.swapExactOutputSingle(daiAmountOut, wethAmountInMax);
+        console.log("DAI Balance", await dai.balanceOf(accounts[0].address));
+    });
+});
