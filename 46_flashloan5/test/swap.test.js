@@ -1,6 +1,6 @@
 const BN = require("bn.js")
-const { sendEther, pow } = require("./util")
-const { DAI, DAI_WHALE, USDC, USDC_WHALE, USDT, USDT_WHALE } = require("./config")
+const { sendEther, pow } = require("./util.js")
+const { DAI, DAI_WHALE, USDC, USDC_WHALE, USDT, USDT_WHALE } = require("./config.js")
 
 const IERC20 = artifacts.require("IERC20")
 const TestUniswapFlashSwap = artifacts.require("TestUniswapFlashSwap")

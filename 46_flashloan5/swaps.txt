@@ -6,6 +6,8 @@ SINGLE SWAPS
 3) npm install @uniswap/v3-periphery @uniswap/v3-core
 4) npx hardhat
 5) npm install @nomicfoundation/hardhat-toolbox
+npm install dotenv
+
 
 6) Copy paste this into hardhat.config.js:
 require("@nomicfoundation/hardhat-toolbox");
