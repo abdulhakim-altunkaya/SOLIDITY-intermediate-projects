@@ -1,6 +1,6 @@
 //SPDX-License-Identifier: MIT
 
-pragma solidity >=0.5.0;
+pragma solidity >=0.8.0;
 import "https://github.com/aave/aave-protocol/blob/4b4545fb583fd4f400507b10f3c3114f45b8a037/contracts/lendingpool/LendingPool.sol";
 import "https://github.com/aave/aave-protocol/blob/master/contracts/configuration/LendingPoolAddressesProvider.sol";
 import "https://github.com/aave/aave-protocol/blob/master/contracts/flashloan/base/FlashLoanReceiverBase.sol";
