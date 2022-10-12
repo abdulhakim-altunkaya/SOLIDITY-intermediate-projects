@@ -1,0 +1,6 @@
+1) install dependencies
+npm install hardhat ethers dotenv
+npm install @nomicfoundation/hardhat-toolbox
+npm install @aave/core-v3
+
+2)

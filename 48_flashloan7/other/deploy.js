@@ -7,10 +7,10 @@
 const hre = require("hardhat");
 
 async function main() {
-  const FlashLoan = await hre.ethers.getContractFactory("FlashLoan");
-  const flashLoan = await FlashLoan.deploy("0xc4dCB5126a3AfEd129BC3668Ea19285A9f56D15D");
-  await flashLoan.deployed();
-  console.log(`it is deployed to ${flashLoan.address}`);
+  const DODOFlashloan = await hre.ethers.getContractFactory("DODOFlashloan");
+  const dODOFlashloan = await DODOFlashloan.deploy();
+  await dODOFlashloan.deployed();
+  console.log(`it is deployed to ${dODOFlashloan.address}`);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
@@ -19,4 +19,3 @@ main().catch((error) => {
   console.error(error);
   process.exitCode = 1;
 });
-    
