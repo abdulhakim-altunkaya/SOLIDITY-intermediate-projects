@@ -1,0 +1,39 @@
+☔ We will create a custom function requesting funds from Aave. such as "flashloan()"
+☔ For aave flashloan we need to implement "IFlashLoanSimpleReceiverBase.sol"
+and we need to include "executeOperation()" function inside our contract. 
+This function will be called by Aave. This function will include our arbitrage and a logic
+to let aave to pull back loan+fee
+☔ We will request and grab funds from Aave but we will NOT send the funds back to Aave.
+We will approve Aave so that it will get the funds by itself,
+
+♿ npm install hardhat ethers dotenv
+npm install "@aave/core-v3"
+npm install "@nomicfoundation/hardhat-toolbox"
+
+♿ replenish your metamask account from aave faucet, grab some usdc and dai
+staging.aave.com/faucet/
+
+♿ Create your .env file:
+PRIVATE_KEY="e4d9ebd93bb2e1e3799f761d76c6192392a986fb64c68417eeb2eda670c84383"
+PROVIDER_URL=`https://eth-goerli.g.alchemy.com/v2/y4tP-sLX0TTuIzbALxBr8AyrEZDOH3Ef`
+
+♿ Dont forget to send some tokens to your your contract. If you will request USDC as flashloan,
+then send some usdc to your contract. The same for other tokens. Because your contract
+needs to pay fee in the currency it borrows.
+
+♿ Update your hardhat.config.js:
+require("@nomicfoundation/hardhat-toolbox");
+require("dotenv").config();
+module.exports = {
+  solidity: "0.8.10",
+  networks: {
+    goerli: {
+      url: process.env.PROVIDER_URL,
+      accounts: [`0x${process.env.PRIVATE_KEY}`]
+    }
+  }
+};
+
+
+
+ 
