@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity >=0.8.7;
+pragma solidity >=0.8.10;
 
 import {FlashLoanSimpleReceiverBase} from "@aave/core-v3/contracts/flashloan/base/FlashLoanSimpleReceiverBase.sol";
 import {IPoolAddressesProvider} from "@aave/core-v3/contracts/interfaces/IPoolAddressesProvider.sol";
 import {IERC20} from "@aave/core-v3/contracts/dependencies/openzeppelin/contracts/IERC20.sol";
 
-contract Sample is FlashLoanSimpleReceiverBase {
+contract Flashloan is FlashLoanSimpleReceiverBase {
     address payable public owner;
 
     modifier onlyOwner(){
@@ -14,7 +14,7 @@ contract Sample is FlashLoanSimpleReceiverBase {
         _;
     }
     constructor(address _addressProvider) FlashLoanSimpleReceiverBase(IPoolAddressesProvider(_addressProvider)) {
-        owner = msg.sender;
+        owner = payable(msg.sender);
     }
 
     function executeOperation(
