@@ -1,13 +1,14 @@
 ☔ We will create a custom function requesting funds from Aave. such as "flashloan()"
-☔ For aave flashloan we need to implement "IFlashLoanSimpleReceiverBase.sol"
+For aave flashloan we need to implement "IFlashLoanSimpleReceiverBase.sol"
 and we need to include "executeOperation()" function inside our contract. 
 This function will be called by Aave. This function will include our arbitrage and a logic
 to let aave to pull back loan+fee
 ☔ We will request and grab funds from Aave but we will NOT send the funds back to Aave.
 We will approve Aave so that it will get the funds by itself,
+Remix erros: 1) connect metamask, 2) transfer usdc/usdt/dai to the contract, 3)pragma versions must be the same: hardhat/contracts 
 
 ♿ npm install hardhat ethers dotenv
-npm install "@aave/core-v3"
+npm install "@aave/core-v3" 
 npm install "@nomicfoundation/hardhat-toolbox"
 
 ♿ replenish your metamask account from aave faucet, grab some usdc and dai
@@ -67,6 +68,7 @@ SNOWTRACE_USDC="0x3E937B4881CBd500d05EeDAB7BA203f2b7B3f74f"
 SNOWTRACE_DAI="0xFc7215C9498Fc12b22Bc0ed335871Db4315f03d3"
 
 TESTNET_FANTOM=""
+AAVE_POOLADDRESSPROVIDER="0xE339D30cBa24C70dCCb82B234589E3C83249e658"
 USDT="0x1b901d3C9D4ce153326BEeC60e0D4A2e8a9e3cE3"
 DAI="0xc469ff24046779DE9B61Be7b5DF91dbFfdF1AE02"
 USDC="0x06f0790c687A1bED6186ce3624EDD9806edf9F4E"
