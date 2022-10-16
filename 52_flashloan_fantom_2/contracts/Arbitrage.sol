@@ -6,85 +6,122 @@ import {FlashLoanSimpleReceiverBase} from "@aave/core-v3/contracts/flashloan/bas
 import {IPoolAddressesProvider} from "@aave/core-v3/contracts/interfaces/IPoolAddressesProvider.sol";
 import {IERC20} from "@aave/core-v3/contracts/dependencies/openzeppelin/contracts/IERC20.sol";
 
-interface IDEX {
-    function depositUSDC(uint _amount) external;
-    function depositDAI(uint amount) external;
+interface IDex {
+    function depositUSDC(uint256 _amount) external;
+
+    function depositDAI(uint256 _amount) external;
+
     function buyDAI() external;
+
     function sellDAI() external;
 }
 
 contract Arbitrage is FlashLoanSimpleReceiverBase {
-    address payable public owner;
-    modifier onlyOwner() {
-        require(msg.sender == owner, "you are not owner");
-        _;
+    address payable owner;
+
+    // Aave ERC20 Token addresses on Goerli network
+    address private immutable daiAddress =
+        0xc469ff24046779DE9B61Be7b5DF91dbFfdF1AE02;
+    address private immutable usdcAddress =
+        0x06f0790c687A1bED6186ce3624EDD9806edf9F4E;
+    address private dexContractAddress =
+        0xC9F1a0063E824e178486456f4e4f7EB70652e38B;
+
+    IERC20 private dai;
+    IERC20 private usdc;
+    IDex private dexContract;
+
+    constructor(address _addressProvider)
+        FlashLoanSimpleReceiverBase(IPoolAddressesProvider(_addressProvider))
+    {
+        owner = payable(msg.sender);
+
+        dai = IERC20(daiAddress);
+        usdc = IERC20(usdcAddress);
+        dexContract = IDex(dexContractAddress);
     }
 
-    IERC20 private constant dai = IERC20(0xc469ff24046779DE9B61Be7b5DF91dbFfdF1AE02);
-    IERC20 private constant usdc = IERC20(0x06f0790c687A1bED6186ce3624EDD9806edf9F4E);
-    IDEX private constant dex = IDEX(0xC9F1a0063E824e178486456f4e4f7EB70652e38B);
-
-    constructor(address _addressProvider) FlashLoanSimpleReceiverBase(IPoolAddressesProvider(_addressProvider)) {
-        owner = msg.sender;
-    }
-
-    //This function will be called after your contract receives flashloan
+    /**
+        This function is called after your contract has received the flash loaned amount
+     */
     function executeOperation(
         address asset,
-        uint amount,
-        uint fee,
+        uint256 amount,
+        uint256 premium,
         address initiator,
         bytes calldata params
-    ) external override returns(bool) {
+    ) external override returns (bool) {
+        //
         // This contract now has the funds requested.
+        // Your logic goes here.
+        //
+
         // Arbirtage operation
-        dexContract.depositUSDC(1000000000); //100 usdc
+        dexContract.depositUSDC(1000000000); // 1000 USDC
         dexContract.buyDAI();
         dexContract.depositDAI(dai.balanceOf(address(this)));
         dexContract.sellDAI();
+
         // At the end of your logic above, this contract owes
         // the flashloaned amount + premiums.
-        // Therefore ensure your contract has enough to repay these amounts.
+        // Therefore ensure your contract has enough to repay
+        // these amounts.
+
         // Approve the Pool contract allowance to *pull* the owed amount
-        uint amountOwed = amount + fee;
+        uint256 amountOwed = amount + premium;
         IERC20(asset).approve(address(POOL), amountOwed);
+
         return true;
     }
 
-    function requestFlashloan(address _token, uint _amount) public {
+    function requestFlashLoan(address _token, uint256 _amount) public {
         address receiverAddress = address(this);
         address asset = _token;
-        uint amount = _amount;
+        uint256 amount = _amount;
         bytes memory params = "";
-        uint referralCode = 0;
+        uint16 referralCode = 0;
 
-        POOL.flashLoanSimple(receiverAddress, asset, amount, params, referralCode);
+        POOL.flashLoanSimple(
+            receiverAddress,
+            asset,
+            amount,
+            params,
+            referralCode
+        );
     }
 
-    function approveUSDC(uint _amount) external returns(bool) {
+    function approveUSDC(uint256 _amount) external returns (bool) {
         return usdc.approve(dexContractAddress, _amount);
     }
 
-    function allowanceUSDC() external view returns(uint) {
+    function allowanceUSDC() external view returns (uint256) {
         return usdc.allowance(address(this), dexContractAddress);
     }
 
-    function approveDAI(uint _amount) external returns(bool) {
+    function approveDAI(uint256 _amount) external returns (bool) {
         return dai.approve(dexContractAddress, _amount);
     }
 
-    function allowanceDAI() external view returns(uint) {
+    function allowanceDAI() external view returns (uint256) {
         return dai.allowance(address(this), dexContractAddress);
     }
 
-    function getBalance(address _tokenAddress) external view returns(uint) {
+    function getBalance(address _tokenAddress) external view returns (uint256) {
         return IERC20(_tokenAddress).balanceOf(address(this));
     }
 
-    function withdraw(address tokenAddress) external {
-        IERC20 token = IERC20(tokenAddress);
+    function withdraw(address _tokenAddress) external onlyOwner {
+        IERC20 token = IERC20(_tokenAddress);
         token.transfer(msg.sender, token.balanceOf(address(this)));
     }
-    receive() external payable {}
 
+    modifier onlyOwner() {
+        require(
+            msg.sender == owner,
+            "Only the contract owner can call this function"
+        );
+        _;
+    }
+
+    receive() external payable {}
 }
