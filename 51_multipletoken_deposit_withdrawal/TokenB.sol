@@ -23,6 +23,7 @@ contract TokenB is ERC20Capped {
     }
 
     function burnTokens(uint amount) external {
+        uint amount2 = amount * (10**18);
         _burn(msg.sender, amount);
     }
 
