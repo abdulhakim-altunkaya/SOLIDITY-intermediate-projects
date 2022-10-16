@@ -16,8 +16,8 @@ contract Dex {
     IERC20 private usdc = IERC20(0x06f0790c687A1bED6186ce3624EDD9806edf9F4E);
     IERC20 private usdt = IERC20(0x1b901d3C9D4ce153326BEeC60e0D4A2e8a9e3cE3);
 
-    uint dexRateA = 90;
-    uint dexRateB = 100;
+    uint dexARate = 90;
+    uint dexBRate = 100;
 
     mapping(address => uint) public daiBalances;
     mapping(address => uint) public usdcBalances;
