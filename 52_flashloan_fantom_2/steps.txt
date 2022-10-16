@@ -7,6 +7,11 @@ to let aave to pull back loan+fee
 We will approve Aave so that it will get the funds by itself,
 Remix erros: 1) connect metamask, 2) transfer usdc/usdt/dai to the contract, 3)pragma versions must be the same: hardhat/contracts 
 
+☔ ARBITRAGE:
+first deploy dex, then deploy arbitrage.
+after you deploy dex, fund it with some dai and usdc so that it will have liquidity for flashloan later.
+To deposit usdc/dai inside the dex contract, you can use metamask or dex contract interface on remix.
+
 ♿ npm install hardhat ethers dotenv
 npm install "@aave/core-v3" 
 npm install "@nomicfoundation/hardhat-toolbox"
