@@ -6,31 +6,32 @@ import {FlashLoanSimpleReceiverBase} from "@aave/core-v3/contracts/flashloan/bas
 import {IPoolAddressesProvider} from "@aave/core-v3/contracts/interfaces/IPoolAddressesProvider.sol";
 import {IERC20} from "@aave/core-v3/contracts/dependencies/openzeppelin/contracts/IERC20.sol";
 
-contract FlashLoan is FlashLoanSimpleReceiverBase {
+contract Flashloan is FlashLoanSimpleReceiverBase {
     address payable public owner;
-    modifier onlyOwner() {
-        require(msg.sender == owner, "you are not owner");
-        _;
-    }
 
     constructor(address _addressProvider) FlashLoanSimpleReceiverBase(IPoolAddressesProvider(_addressProvider)) {
         owner = payable(msg.sender);
     }
 
+    modifier onlyOwner() {
+        require(msg.sender == owner, "you are not owner");
+        _;
+    }
+
     function executeOperation(
         address asset,
         uint amount,
-        uint fee,
+        uint fee, 
         address initiator,
         bytes calldata params
     ) external override returns(bool) {
         uint amountOwed = amount + fee;
-        //address(POOL) is aave pool
+        //address(POOL) is Aave Pool
         IERC20(asset).approve(address(POOL), amountOwed);
         return true;
     }
 
-    function requestFlashLoan(address _token, uint _amount) public {
+    function requestFlashloan(address _token, uint _amount) public {
         address receiverAddress = address(this);
         address asset = _token;
         uint amount = _amount;
@@ -44,9 +45,9 @@ contract FlashLoan is FlashLoanSimpleReceiverBase {
     }
 
     function withdraw(address tokenAddress) external onlyOwner {
-        IERC20 token  = IERC20(tokenAddress);
+        IERC20 token = IERC20(tokenAddress);
         token.transfer(msg.sender, token.balanceOf(address(this)));
     }
-    receive() external payable{}
-}
 
+    receive() external payable {}
+}

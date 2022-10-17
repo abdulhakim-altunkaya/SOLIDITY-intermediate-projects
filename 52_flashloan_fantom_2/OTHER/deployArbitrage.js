@@ -7,10 +7,10 @@
 const hre = require("hardhat");
 
 async function main() {
-  const FlashLoanArbitrage = await hre.ethers.getContractFactory("FlashLoanArbitrage");
-  const flashLoanArbitrage = await FlashLoanArbitrage.deploy("0xE339D30cBa24C70dCCb82B234589E3C83249e658");
-  await flashLoanArbitrage.deployed();
-  console.log(`flashloan is deployed to ${flashLoanArbitrage.address}`);
+  const Arbitrage = await hre.ethers.getContractFactory("Arbitrage");
+  const arbitrage = await Arbitrage.deploy("0xE339D30cBa24C70dCCb82B234589E3C83249e658");
+  await arbitrage.deployed();
+  console.log(`flashloan is deployed to ${arbitrage.address}`);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

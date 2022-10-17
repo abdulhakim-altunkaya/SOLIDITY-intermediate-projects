@@ -1,73 +1,78 @@
-//SPDX-License-Identifier: MIT
-
-pragma solidity >=0.8.10;
+// contracts/FlashLoan.sol
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.10;
 
 import {IERC20} from "@aave/core-v3/contracts/dependencies/openzeppelin/contracts/IERC20.sol";
 
 contract Dex {
     address payable public owner;
 
-    modifier onlyOwner() {
-        require(msg.sender == owner, "you are not owner");
-        _;
-    }
+    // Aave ERC20 Token addresses on Goerli network
+    address private immutable daiAddress =
+        0xc469ff24046779DE9B61Be7b5DF91dbFfdF1AE02;
+    address private immutable usdcAddress =
+        0x06f0790c687A1bED6186ce3624EDD9806edf9F4E;
 
-    IERC20 private dai = IERC20(0xc469ff24046779DE9B61Be7b5DF91dbFfdF1AE02);
-    IERC20 private usdc = IERC20(0x06f0790c687A1bED6186ce3624EDD9806edf9F4E);
-    IERC20 private usdt = IERC20(0x1b901d3C9D4ce153326BEeC60e0D4A2e8a9e3cE3);
+    IERC20 private dai;
+    IERC20 private usdc;
 
-    uint dexARate = 90;
-    uint dexBRate = 100;
+    // exchange rate indexes
+    uint256 dexARate = 90;
+    uint256 dexBRate = 100;
 
-    mapping(address => uint) public daiBalances;
-    mapping(address => uint) public usdcBalances;
-    mapping(address => uint) public usdtBalances;
+    // keeps track of individuals' dai balances
+    mapping(address => uint256) public daiBalances;
+
+    // keeps track of individuals' USDC balances
+    mapping(address => uint256) public usdcBalances;
 
     constructor() {
         owner = payable(msg.sender);
+        dai = IERC20(daiAddress);
+        usdc = IERC20(usdcAddress);
     }
 
-    function depositUSDC(uint amount) external {
-        usdcBalances[msg.sender] += amount;
-        /* The allowance() function returns the token amount remaining, which the spender is currently
-         allowed to withdraw from the owner's account. This function returns the remaining balance of 
-         tokens from the allowed mapping. The allowed mapping is updated when approve(), transferFrom() */
-        uint allowance = usdc.allowance(msg.sender, address(this));
-        require(allowance >= amount, "check the token balance");
-        usdc.transferFrom(msg.sender, address(this), amount);
+    function depositUSDC(uint256 _amount) external {
+        usdcBalances[msg.sender] += _amount;
+        uint256 allowance = usdc.allowance(msg.sender, address(this));
+        require(allowance >= _amount, "Check the token allowance");
+        usdc.transferFrom(msg.sender, address(this), _amount);
     }
 
-    function depositDai(uint amount) external {
-        daiBalances[msg.sender] += amount;
-        uint allowance = dai.allowance(msg.sender, address(this));
-        require(allowance >= amount, "check the token balance");
-        dai.transferFrom(msg.sender, address(this), amount);
+    function depositDAI(uint256 _amount) external {
+        daiBalances[msg.sender] += _amount;
+        uint256 allowance = dai.allowance(msg.sender, address(this));
+        require(allowance >= _amount, "Check the token allowance");
+        dai.transferFrom(msg.sender, address(this), _amount);
     }
 
-    function depositUSDT(uint amount) external {
-        usdtBalances[msg.sender] += amount;
-        uint allowance = usdt.allowance(msg.sender, address(this));
-        require(allowance >= amount, "check the token balance");
-        usdt.transferFrom(msg.sender, address(this), amount);
-    }
-    
     function buyDAI() external {
-        uint daiToReceive = ((usdcBalances[msg.sender] / dexARate) * 100) * (10**12);
+        uint256 daiToReceive = ((usdcBalances[msg.sender] / dexARate) * 100) *
+            (10**12);
         dai.transfer(msg.sender, daiToReceive);
     }
 
     function sellDAI() external {
-        uint usdcToReceive = ((daiBalances[msg.sender] * dexBRate) / 100) / (10**12);
+        uint256 usdcToReceive = ((daiBalances[msg.sender] * dexBRate) / 100) /
+            (10**12);
         usdc.transfer(msg.sender, usdcToReceive);
     }
 
-    function getBalance(address tokenAddress) external view returns(uint) {
-        return IERC20(tokenAddress).balanceOf(address(this));
+    function getBalance(address _tokenAddress) external view returns (uint256) {
+        return IERC20(_tokenAddress).balanceOf(address(this));
     }
 
-    function withdraw(address tokenAddress, address receiver, uint amount) external onlyOwner {
-        IERC20 token = IERC20(tokenAddress);
-        token.transfer(receiver, amount);
+    function withdraw(address _tokenAddress) external onlyOwner {
+        IERC20 token = IERC20(_tokenAddress);
+        token.transfer(msg.sender, token.balanceOf(address(this)));
+    }
+
+    modifier onlyOwner() {
+        require(
+            msg.sender == owner,
+            "Only the contract owner can call this function"
+        );
+        _;
     }
 
     receive() external payable {}
