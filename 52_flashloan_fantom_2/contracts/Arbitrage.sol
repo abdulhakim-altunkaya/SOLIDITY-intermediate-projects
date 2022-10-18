@@ -5,6 +5,12 @@ pragma solidity >=0.8.10;
 import {FlashLoanSimpleReceiverBase} from "@aave/core-v3/contracts/flashloan/base/FlashLoanSimpleReceiverBase.sol";
 import {IPoolAddressesProvider} from "@aave/core-v3/contracts/interfaces/IPoolAddressesProvider.sol";
 import {IERC20} from "@aave/core-v3/contracts/dependencies/openzeppelin/contracts/IERC20.sol";
+/*
+https://github.com/aave/aave-v3-core/blob/master/contracts/flashloan/base/FlashLoanSimpleReceiverBase.sol
+https://github.com/aave/aave-v3-core/blob/master/contracts/interfaces/IPoolAddressesProvider.sol
+https://github.com/aave/aave-v3-core/blob/master/contracts/dependencies/openzeppelin/contracts/IERC20.sol
+
+ */
 
 interface IDex {
     function depositUSDC(uint _amount) external;
@@ -22,7 +28,7 @@ contract Arbitrage is FlashLoanSimpleReceiverBase {
 
     address private immutable daiAddress = 0xc469ff24046779DE9B61Be7b5DF91dbFfdF1AE02;
     address private immutable usdcAddress = 0x06f0790c687A1bED6186ce3624EDD9806edf9F4E;
-    address private immutable dexAddress = 0x7b25b45D11e3f7c39959C96324aD765a73081867;
+    address private immutable dexAddress = 0x654Ef8aA8f327451c70359aeEdd91652De20886E;
 
     IERC20 private dai;
     IERC20 private usdc;
@@ -72,7 +78,7 @@ contract Arbitrage is FlashLoanSimpleReceiverBase {
     function approveDAI(uint amount) external returns(bool) {
         return dai.approve(dexAddress, amount);
     }
-    function allowanceDAI() external view returns(bool) {
+    function allowanceDAI() external view returns(uint) {
         return dai.allowance(address(this), dexAddress);
     }
     function getBalance(address tokenAddress) external view returns(uint) {

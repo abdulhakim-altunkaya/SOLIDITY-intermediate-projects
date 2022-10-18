@@ -9,9 +9,10 @@ Remix erros: 1) connect metamask, 2) transfer usdc/usdt/dai to the contract, 3)p
 
 ☔ ARBITRAGE:
 first deploy dex, then deploy arbitrage.
+Copy dex address and paste it inside the arbitrage contract. Go to arbitrage deployment file and paste POOL address.
 after you deploy dex, fund it with some dai and usdc so that it will have liquidity for flashloan later.
 To deposit usdc/dai inside the dex contract, you can use metamask or dex contract interface on remix.
-Actually you can use only metamask to send tokens to the dex. If you use contract interface, thats another thing. 
+Actually you should use only metamask to send tokens to the dex. If you use contract interface, thats another thing. 
 After depositing some usdc and dai inside dex contract, we must also approve dex contract.
 to apprrove dex contract, go to your flashloan contract, find approve function and enter
 dex contract address and amount you want to wwithdraw. Amount should of course be less than liquidity.
