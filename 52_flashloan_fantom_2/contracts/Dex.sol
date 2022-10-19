@@ -6,14 +6,15 @@ pragma solidity >=0.8.10;
 
 contract Dex {
 
-    address payable owner;
+    address payable public owner;
     modifier onlyOwner(){
         require(msg.sender == owner, "you are not owner");
         _;
     }
     constructor(){
-        msg.sender = payable(owner);
+        owner = payable(msg.sender);
     }
+
 
     IERC20 private constant dai = IERC20(0xc469ff24046779DE9B61Be7b5DF91dbFfdF1AE02);
     IERC20 private constant usdc = IERC20(0x06f0790c687A1bED6186ce3624EDD9806edf9F4E);
@@ -35,7 +36,7 @@ contract Dex {
         daiBalances[msg.sender] += amount;
         uint allowance = dai.allowance(msg.sender, address(this));
         require(allowance >= amount, "check the token balance");
-        dai transferFrom(msg.sender, address(this), amount);
+        dai.transferFrom(msg.sender, address(this), amount);
     }
 
     function buyDAI() external {
