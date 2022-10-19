@@ -5,37 +5,42 @@ import {IERC20} from "@aave/core-v3/contracts/dependencies/openzeppelin/contract
 pragma solidity >=0.8.10;
 
 contract Dex {
-
-    address payable owner;
-    modifier onlyOwner(){
+    address payable public owner;
+    modifier onlyOwner() {
         require(msg.sender == owner, "you are not owner");
         _;
     }
-    constructor(){
-        msg.sender = payable(owner);
-    }
 
-    IERC20 private constant dai = IERC20(0xc469ff24046779DE9B61Be7b5DF91dbFfdF1AE02);
-    IERC20 private constant usdc = IERC20(0x06f0790c687A1bED6186ce3624EDD9806edf9F4E);
+    address private immutable daiAddress = 0xc469ff24046779DE9B61Be7b5DF91dbFfdF1AE02;
+    address private immutable usdcAddress = 0x06f0790c687A1bED6186ce3624EDD9806edf9F4E;
 
-    uint dexARate  = 90;
+    IERC20 private dai;
+    IERC20 private usdc;
+
+    uint dexARate = 90;
     uint dexBRate = 100;
 
     mapping(address => uint) public daiBalances;
     mapping(address => uint) public usdcBalances;
 
-    function depositUSDC(uint amount) external {
-        usdcBalances[msg.sender] += amount;
-        uint allowance = usdc.allowance(msg.sender, address(this));
-        require(allowance >= amount, "check the token balance");
-        usdc.transferFrom(msg.sender, address(this), amount);
+    constructor() {
+        owner = payable(msg.sender);
+        dai = IERC20(daiAddress);
+        usdc = IERC20(usdcAddress);
     }
 
-    function depositDAI(uint amount) external {
-        daiBalances[msg.sender] += amount;
+    function depositUSDC(uint _amount) external {
+        usdcBalances[msg.sender] += _amount;
+        uint allowance = usdc.allowance(msg.sender, address(this));
+        require(allowance >= _amount, "check the token balance");
+        usdc.transferFrom(msg.sender, address(this), _amount);
+    }
+
+    function depositDAI(uint _amount) external {
+        daiBalances[msg.sender] += _amount;
         uint allowance = dai.allowance(msg.sender, address(this));
-        require(allowance >= amount, "check the token balance");
-        dai transferFrom(msg.sender, address(this), amount);
+        require(allowance >= _amount, "check the token allowance");
+        dai.transferFrom(msg.sender, address(this), _amount);
     }
 
     function buyDAI() external {
@@ -52,11 +57,10 @@ contract Dex {
         return IERC20(tokenAddress).balanceOf(address(this));
     }
 
-    function withdraw(address tokenAddress, uint amount) external onlyOwner {
+    function withdraw(address tokenAddress, uint amount) external onlyOwner{
         IERC20 token = IERC20(tokenAddress);
         token.transfer(msg.sender, amount);
     }
-
     receive() external payable{}
 
 }
