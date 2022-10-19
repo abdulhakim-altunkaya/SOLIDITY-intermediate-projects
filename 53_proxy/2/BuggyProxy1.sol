@@ -69,5 +69,6 @@ Deploy all 3 contracts on Remix
 Copy the address of Proxy and go deployment section, open V1
 Paste address of Proxy to the "at the" input area. And deploy it.
 This is weird, we will use interface of V1 but on the background it will be Proxy.
+It is weird because we will use address and storage of Proxy, but we will use interface of v1.
 
  */

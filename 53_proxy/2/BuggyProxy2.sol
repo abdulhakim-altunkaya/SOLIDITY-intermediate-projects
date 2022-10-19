@@ -67,6 +67,9 @@ implementation.delegatecall(msg.data) will return 2 result:
     2) bytes of output
 
 Above contract has an error. Because when we want to return some variable values from implementation,
-it will not return anything because fallback does not return any data. We need to fix this. 
+it will not return anything because fallback (_delegate method) does not return any data. We need to fix this. 
+To make _delegate function to return data, we need to update it. As you can see _delegate does not have a "return"
+statement. Which means its signature does not return anything. In this we have one solution.
+To force a function to return some data, we can use "assembly". In the BuggyProxy3 we will use assembly.
 
  */
