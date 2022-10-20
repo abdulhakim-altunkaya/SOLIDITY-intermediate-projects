@@ -21,9 +21,9 @@ contract Dex {
     uint dexARate = 80;
     uint dexBRate = 100;
 
-    mapping(address => uint) external daiBalances;
-    mapping(address => uint) external usdcBalances;
-    mapping(address => uint) external usdtBalances;
+    mapping(address => uint) public daiBalances;
+    mapping(address => uint) public usdcBalances;
+    mapping(address => uint) public usdtBalances;
 
 
     /*deposit functions below assumes you have already approved this contract. Logic:
@@ -78,7 +78,7 @@ contract Dex {
     function getBalance(address tokenAddress) external view returns(uint) {
         return IERC20(tokenAddress).balanceOf(address(this));
     }
-    function withdraw(address tokenAddress, amount) external {
+    function withdraw(address tokenAddress, uint amount) external onlyOwner {
         IERC20 tokkie = IERC20(tokenAddress);
         tokkie.transfer(msg.sender, amount);
     }
