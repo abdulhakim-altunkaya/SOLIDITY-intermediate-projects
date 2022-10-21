@@ -24,6 +24,7 @@ contract Dex {
 
     mapping(address => uint) public daiBalances;
     mapping(address => uint) public usdcBalances;
+    mapping(address => uint) public usdtBalances;
 
     /*deposit functions below assumes you have already approved this contract. Logic:
     1) approve dex contract to spend a certain amount on your behalf.
