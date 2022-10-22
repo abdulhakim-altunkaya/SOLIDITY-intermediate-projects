@@ -32,8 +32,8 @@ contract Arbitrage is FlashLoanSimpleReceiverBase {
     IERC20 private constant dai = IERC20(0xc469ff24046779DE9B61Be7b5DF91dbFfdF1AE02);
     IERC20 private constant usdc = IERC20(0x06f0790c687A1bED6186ce3624EDD9806edf9F4E);
     IERC20 private constant usdt = IERC20(0x1b901d3C9D4ce153326BEeC60e0D4A2e8a9e3cE3);
-    IDex private constant dexContract = IDex();
-    address private immutable dexAddress = ;
+    IDex private constant dexContract = IDex(0xD8423dEE6f51e45FA3f1182Ea15ce9D4D26Da27E);
+    address private immutable dexAddress = 0xD8423dEE6f51e45FA3f1182Ea15ce9D4D26Da27E;
 
     constructor(address addressProvider) FlashLoanSimpleReceiverBase(IPoolAddressesProvider(addressProvider)) {
         owner = payable(msg.sender);
