@@ -29,11 +29,11 @@ contract Arbitrage is FlashLoanSimpleReceiverBase {
         require(msg.sender == owner, "you are not owner");
         _;
     }
-    IERC20 private constant dai = IERC20(0xc469ff24046779DE9B61Be7b5DF91dbFfdF1AE02);
+    IERC20 private constant dai = IERC20(0xAC1a9503D1438B56BAa99939D44555FC2dC286Fc);
     IERC20 private constant usdc = IERC20(0x06f0790c687A1bED6186ce3624EDD9806edf9F4E);
     IERC20 private constant usdt = IERC20(0x1b901d3C9D4ce153326BEeC60e0D4A2e8a9e3cE3);
-    IDex private constant dexContract = IDex(0xD8423dEE6f51e45FA3f1182Ea15ce9D4D26Da27E);
-    address private immutable dexAddress = 0xD8423dEE6f51e45FA3f1182Ea15ce9D4D26Da27E;
+    IDex private constant dexContract = IDex(0xA41c391477B32EDbcB48C4EdE568270D6b257FE4);
+    address private immutable dexAddress = 0xA41c391477B32EDbcB48C4EdE568270D6b257FE4;
 
     constructor(address addressProvider) FlashLoanSimpleReceiverBase(IPoolAddressesProvider(addressProvider)) {
         owner = payable(msg.sender);
@@ -58,6 +58,28 @@ contract Arbitrage is FlashLoanSimpleReceiverBase {
         IERC20(asset).approve(address(POOL), amountOwed);
         return true;
     }
+
+    /*
+    function executeOperation(
+        address asset,
+        uint amount,
+        uint premium,
+        address initiator,
+        bytes calldata params
+    ) external override returns(bool) {
+        //This contract now has the funds. Arbitrage operation:
+        dexContract.depositUSDC(1000000000);
+        dexContract.buyUSDT();
+        dexContract.depositUSDT(usdt.balanceOf(address(this)));
+        dexContract.sellUSDT();
+        // At the end of your logic above, this contract owes the flashloaned amount + premiums.
+        // Therefore ensure your contract has enough to repay these amounts.
+        // Approve the Pool contract allowance to *pull* the owed amount
+        uint amountOwed = amount + premium;
+        IERC20(asset).approve(address(POOL), amountOwed);
+        return true;
+    }
+    */
     function requestFlashLoan(address token, uint _amount) public {
         address receiverAddress = address(this);
         address asset = token;
@@ -78,6 +100,12 @@ contract Arbitrage is FlashLoanSimpleReceiverBase {
     }
     function allowanceDAI() external view returns(uint) {
         return dai.allowance(address(this), dexAddress);
+    }
+    function approveUSDT(uint amount) external returns(bool) {
+        return usdt.approve(dexAddress, amount);
+    }
+    function allowanceUSDT() external view returns(uint) {
+        return usdt.allowance(address(this), dexAddress);
     }
 
     function getBalance(address tokenAddress) external view returns(uint) {

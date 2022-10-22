@@ -20,6 +20,9 @@ For usdc enter 1000000000 (1000 usdc), 1200000000000000000000 (1200 dai)
 Then click allowance buttons to see if the amounts are approved.
 then go requestFlashloan function and request 1000000000 (1000 usdc)
 
+If you want to replace dai, replace it with another token of 18 decimals. 
+If you want to replace usdc, replace it with another token of 6 decimals.
+
 ♿ npm install hardhat ethers dotenv
 npm install "@aave/core-v3" 
 npm install "@nomicfoundation/hardhat-toolbox"
@@ -85,6 +88,7 @@ AAVE_POOLADDRESSPROVIDER="0xE339D30cBa24C70dCCb82B234589E3C83249e658"
 USDT="0x1b901d3C9D4ce153326BEeC60e0D4A2e8a9e3cE3"
 DAI="0xc469ff24046779DE9B61Be7b5DF91dbFfdF1AE02"
 USDC="0x06f0790c687A1bED6186ce3624EDD9806edf9F4E"
+CURVE="0xAC1a9503D1438B56BAa99939D44555FC2dC286Fc";
 
 
 FOR REMIX IN CASE YOU NEED:
