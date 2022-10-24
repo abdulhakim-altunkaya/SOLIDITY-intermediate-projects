@@ -45,13 +45,13 @@ contract FlashLoan is FlashLoanSimpleReceiverBase {
     function getBalance18Decimals(address tokenAddress) external view returns(uint) {
         uint amount = IERC20(tokenAddress).balanceOf(address(this));
         uint amount2 = amount / (10 ** 12);
-        return amount2
+        return amount2;
     }
 
     function getBalance6Decimals(address tokenAddress) external view returns(uint) {
-        uint amount = return IERC20(tokenAddress).balanceOf(address(this));
+        uint amount = IERC20(tokenAddress).balanceOf(address(this));
         uint amount2 = amount / (10 ** 12);
-        return amount2
+        return amount2;
     }
 
     function withdraw18Decimals(address tokenAddress, uint amount) external {
