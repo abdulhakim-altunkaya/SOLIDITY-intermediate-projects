@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: MIT
+//SDPX-License-Identifier: MIT
 
 pragma solidity >=0.8.10;
 
@@ -7,13 +7,9 @@ import {IPoolAddressesProvider} from "@aave/core-v3/contracts/interfaces/IPoolAd
 import {IERC20} from "@aave/core-v3/contracts/dependencies/openzeppelin/contracts/IERC20.sol";
 
 contract FlashLoan is FlashLoanSimpleReceiverBase {
-
-    error NotOwner(string message, address caller);
     address payable public owner;
     modifier onlyOwner() {
-        if (msg.sender != owner) {
-            revert NotOwner("you are not owner", msg.sender);
-        }
+        require(msg.sender == owner, "you are not owner");
         _;
     }
     constructor(address _addressProvider) FlashLoanSimpleReceiverBase(IPoolAddressesProvider(_addressProvider)) {
@@ -21,15 +17,15 @@ contract FlashLoan is FlashLoanSimpleReceiverBase {
     }
 
     function executeOperation(
-        address asset,
-        uint amount,
-        uint premium,
-        address initiator,
+        address asset, 
+        uint amount, 
+        uint premium, 
+        address initiator, 
         bytes calldata params
     ) external override returns(bool) {
         uint amountOwed = amount + premium;
         IERC20(asset).approve(address(POOL), amountOwed);
-        //approve(spender, amount);
+        //approve(spender, amount)
         return true;
     }
 
@@ -42,29 +38,14 @@ contract FlashLoan is FlashLoanSimpleReceiverBase {
         POOL.flashLoanSimple(receiverAddress, asset, amount, params, referralCode);
     }
 
-    function getBalance18Decimals(address tokenAddress) external view returns(uint) {
-        uint amount = IERC20(tokenAddress).balanceOf(address(this));
-        uint amount2 = amount / (10 ** 12);
-        return amount2
+    function getBalance(address tokenAddress) external view returns(uint) {
+        return IERC20(tokenAddress).balanceOf(address(this));
     }
 
-    function getBalance6Decimals(address tokenAddress) external view returns(uint) {
-        uint amount = return IERC20(tokenAddress).balanceOf(address(this));
-        uint amount2 = amount / (10 ** 12);
-        return amount2
-    }
-
-    function withdraw18Decimals(address tokenAddress, uint amount) external {
+    function withdraw(address tokenAddress, uint amount) external {
         IERC20 token = IERC20(tokenAddress);
-        uint amount2 = amount * (10**12);
-        token.transfer(msg.sender, amount2);
-    }
-    function withdraw6Decimals(address tokenAddress, uint amount) external {
-        IERC20 token = IERC20(tokenAddress);
-        uint amount2 = amount * (10**12);
-        token.transfer(msg.sender, amount2);
+        token.transfer(msg.sender, amount);
     }
 
     receive() external payable{}
 }
-
