@@ -14,13 +14,10 @@ https://github.com/aave/aave-v3-core/blob/master/contracts/dependencies/openzepp
 */
 
 interface IDex {
-    function depositDAI(uint amount) external;
+    function depositToken(uint amount) external;
     function depositUSDC(uint amount) external;
-    function depositUSDT(uint amount) external;
-    function buyDAI() external;
-    function sellDAI() external;
-    function buyUSDT() external;
-    function sellUSDT() external;
+    function buyToken() external;
+    function sellToken() external;
 }
 
 contract Arbitrage is FlashLoanSimpleReceiverBase {
@@ -29,10 +26,11 @@ contract Arbitrage is FlashLoanSimpleReceiverBase {
         require(msg.sender == owner, "you are not owner");
         _;
     }
-    IERC20 private constant dai = IERC20(0xAC1a9503D1438B56BAa99939D44555FC2dC286Fc);
     IERC20 private constant usdc = IERC20(0x06f0790c687A1bED6186ce3624EDD9806edf9F4E);
-    IERC20 private constant usdt = IERC20(0x1b901d3C9D4ce153326BEeC60e0D4A2e8a9e3cE3);
-
+    IERC20 public token;
+    function setToken(address _tokenAddress) external {
+        token = IERC20(_tokenAddress);
+    }
     IDex public dexContract;
     address public dexAddress;
     function setContract(address _dexAddress) external {
@@ -54,9 +52,9 @@ contract Arbitrage is FlashLoanSimpleReceiverBase {
     ) external override returns(bool) {
         //This contract now has the funds. Arbitrage operation:
         dexContract.depositUSDC(1000000000);
-        dexContract.buyDAI();
-        dexContract.depositDAI(dai.balanceOf(address(this)));
-        dexContract.sellDAI();
+        dexContract.buyToken();
+        dexContract.depositToken(token.balanceOf(address(this)));
+        dexContract.sellToken();
         // At the end of your logic above, this contract owes the flashloaned amount + premiums.
         // Therefore ensure your contract has enough to repay these amounts.
         // Approve the Pool contract allowance to *pull* the owed amount
@@ -65,30 +63,9 @@ contract Arbitrage is FlashLoanSimpleReceiverBase {
         return true;
     }
 
-    /*
-    function executeOperation(
-        address asset,
-        uint amount,
-        uint premium,
-        address initiator,
-        bytes calldata params
-    ) external override returns(bool) {
-        //This contract now has the funds. Arbitrage operation:
-        dexContract.depositUSDC(1000000000);
-        dexContract.buyUSDT();
-        dexContract.depositUSDT(usdt.balanceOf(address(this)));
-        dexContract.sellUSDT();
-        // At the end of your logic above, this contract owes the flashloaned amount + premiums.
-        // Therefore ensure your contract has enough to repay these amounts.
-        // Approve the Pool contract allowance to *pull* the owed amount
-        uint amountOwed = amount + premium;
-        IERC20(asset).approve(address(POOL), amountOwed);
-        return true;
-    }
-    */
-    function requestFlashLoan(address token, uint _amount) public {
+    function requestFlashLoan(address _tokenA, uint _amount) public {
         address receiverAddress = address(this);
-        address asset = token;
+        address asset = _tokenA;
         uint amount = _amount;
         bytes memory params = "";
         uint16 referralCode = 0;
@@ -101,17 +78,11 @@ contract Arbitrage is FlashLoanSimpleReceiverBase {
     function allowanceUSDC() external view returns(uint) {
         return usdc.allowance(address(this), dexAddress);
     }
-    function approveDAI(uint amount) external returns(bool) {
-        return dai.approve(dexAddress, amount);
+    function approveToken(uint amount) external returns(bool) {
+        return token.approve(dexAddress, amount);
     }
-    function allowanceDAI() external view returns(uint) {
-        return dai.allowance(address(this), dexAddress);
-    }
-    function approveUSDT(uint amount) external returns(bool) {
-        return usdt.approve(dexAddress, amount);
-    }
-    function allowanceUSDT() external view returns(uint) {
-        return usdt.allowance(address(this), dexAddress);
+    function allowanceToken() external view returns(uint) {
+        return token.allowance(address(this), dexAddress);
     }
 
     function getBalance(address tokAddress) external view returns(uint) {
