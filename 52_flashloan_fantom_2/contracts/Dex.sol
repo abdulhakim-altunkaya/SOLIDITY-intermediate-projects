@@ -5,30 +5,26 @@ pragma solidity >=0.8.10;
 import {IERC20} from "@aave/core-v3/contracts/dependencies/openzeppelin/contracts/IERC20.sol";
 
 contract Dex {
-    error NotOwner(string message, address caller);
+    
     address payable public owner;
     modifier onlyOwner() {
-        if(msg.sender != owner) {
-            revert NotOwner("you are not owner", msg.sender);
-        }
+        require(msg.sender == owner, "you are not owner");
         _;
     }
-
     constructor() {
-        owner = msg.sender;
+        owner = payable(msg.sender);
     }
 
+    IERC20 private constant dai = IERC20(0xAC1a9503D1438B56BAa99939D44555FC2dC286Fc);
     IERC20 private constant usdc = IERC20(0x06f0790c687A1bED6186ce3624EDD9806edf9F4E);
-    IERC20 public token;
-    function setToken(address tokenAddress) external {
-        token = IERC20(tokenAddress);
-    }
+    IERC20 private constant usdt = IERC20(0x1b901d3C9D4ce153326BEeC60e0D4A2e8a9e3cE3);
 
     uint dexARate = 90;
     uint dexBRate = 100;
 
-    mapping(address => uint) public tokenBalances;
-    mapping(address => uint) public usdcBalances;
+    mapping(address => uint) internal daiBalances;
+    mapping(address => uint) internal usdcBalances;
+    mapping(address => uint) internal usdtBalances;
 
     /*deposit functions below assumes you have already approved this contract. Logic:
     1) approve dex contract to spend a certain amount on your behalf.
@@ -45,28 +41,42 @@ contract Dex {
     allowance(sender, spender)
     transferFrom(sender, recipient, amount)  
     */
-
     function depositUSDC(uint amount) external {
         usdcBalances[msg.sender] += amount;
         uint allowance = usdc.allowance(msg.sender, address(this));
-        require(allowance >= amount, "allowed/approved amount must be bigger than the flashloan amount");
+        require(allowance >= amount, "allowed/approved amount must be bigger than flashloan amount");
         usdc.transferFrom(msg.sender, address(this), amount);
     }
 
-    function depositToken(uint amount) external {
-        tokenAddress[msg.sender] += amount;
-        uint allowance = token.allowance(msg.sender, address(this));
-        require(allowance >= amount, "allowed/approved amount must be bigger than the flashloan amount");
-        token.transferFrom(msg.sender, address(this), amount);
+    function depositDAI(uint amount) external {
+        daiBalances[msg.sender] += amount;
+        uint allowance = dai.allowance(msg.sender, address(this));
+        require(allowance >= amount, "allowed/approved amount must be bigger than flashloan amount");
+        dai.transferFrom(msg.sender, address(this), amount);
     }
 
-    function buyToken() external {
-        uint tokenToReceive = ((usdcBalances[msg.sender] / dexARate) * 100) * (10**12);
-        token.transfer(msg.sender, tokenToReceive);
+    function depositUSDT(uint amount) external {
+        usdtBalances[msg.sender] += amount;
+        uint allowance = usdt.allowance(msg.sender, address(this));
+        require(allowance >= amount, "allowed/approved amount must be bigger than flashloan amount");
+        usdt.transferFrom(msg.sender, address(this), amount);
     }
 
-    function sellToken() external {
-        uint usdcToReceive = ((tokenBalances[msg.sender] * dexBRate) / 100) / (10**12);
+    function buyUSDT() external {
+        uint usdtToReceive = ((usdcBalances[msg.sender] / dexARate) * 100) * (10**12);
+        usdt.transfer(msg.sender, usdtToReceive);
+    }
+    function sellUSDT() external {
+        uint usdcToReceive = ((usdtBalances[msg.sender] * dexBRate) / 100) / (10**12);
+        usdc.transfer(msg.sender, usdcToReceive);
+    }
+
+    function buyDAI() external {
+        uint daiToReceive = ((usdcBalances[msg.sender] / dexARate) * 100) * (10**12);
+        dai.transfer(msg.sender, daiToReceive);
+    }
+    function sellDAI() external {
+        uint usdcToReceive = ((daiBalances[msg.sender] * dexBRate) / 100) / (10**12);
         usdc.transfer(msg.sender, usdcToReceive);
     }
 
@@ -74,10 +84,9 @@ contract Dex {
         return IERC20(tokenAddress).balanceOf(address(this));
     }
 
-    function withdraw(address tokenAddress, uint amount) external onlyOwner {
+    function withdraw(address tokenAddress, uint amount) external {
         IERC20 token = IERC20(tokenAddress);
         token.transfer(msg.sender, amount);
     }
-
-    receive() external payable {}
+    receive() external payable{}
 }
