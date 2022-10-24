@@ -32,14 +32,12 @@ contract Arbitrage is FlashLoanSimpleReceiverBase {
     IERC20 private constant dai = IERC20(0xAC1a9503D1438B56BAa99939D44555FC2dC286Fc);
     IERC20 private constant usdc = IERC20(0x06f0790c687A1bED6186ce3624EDD9806edf9F4E);
     IERC20 private constant usdt = IERC20(0x1b901d3C9D4ce153326BEeC60e0D4A2e8a9e3cE3);
-
     IDex public dexContract;
     address public dexAddress;
     function setContract(address _dexAddress) external {
         dexContract = IDex(_dexAddress);
         dexAddress = _dexAddress;
     }
-
 
     constructor(address addressProvider) FlashLoanSimpleReceiverBase(IPoolAddressesProvider(addressProvider)) {
         owner = payable(msg.sender);
@@ -114,12 +112,12 @@ contract Arbitrage is FlashLoanSimpleReceiverBase {
         return usdt.allowance(address(this), dexAddress);
     }
 
-    function getBalance(address tokAddress) external view returns(uint) {
-        return IERC20(tokAddress).balanceOf(address(this));
+    function getBalance(address tokenAddress) external view returns(uint) {
+        return IERC20(tokenAddress).balanceOf(address(this));
     }
-    function withdraw(address tokAddress, uint amount) external {
-        IERC20 tokkie = IERC20(tokAddress);
-        tokkie.transfer(msg.sender, amount);
+    function withdraw(address tokenAddress, uint amount) external {
+        IERC20 token = IERC20(tokenAddress);
+        token.transfer(msg.sender, amount);
     }
     receive() external payable{}
 }

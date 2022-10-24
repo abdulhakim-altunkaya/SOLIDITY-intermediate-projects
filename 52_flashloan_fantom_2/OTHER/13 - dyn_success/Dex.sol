@@ -15,13 +15,9 @@ contract Dex {
         owner = payable(msg.sender);
     }
 
-
+    IERC20 private constant dai = IERC20(0xAC1a9503D1438B56BAa99939D44555FC2dC286Fc);
     IERC20 private constant usdc = IERC20(0x06f0790c687A1bED6186ce3624EDD9806edf9F4E);
     IERC20 private constant usdt = IERC20(0x1b901d3C9D4ce153326BEeC60e0D4A2e8a9e3cE3);
-    IERC20 public dai;
-    function setToken(address _tokenAddress) external {
-        dai = IERC20(_tokenAddress);
-    }
 
     uint dexARate = 90;
     uint dexBRate = 100;
@@ -84,13 +80,13 @@ contract Dex {
         usdc.transfer(msg.sender, usdcToReceive);
     }
 
-    function getBalance(address _tokAddress) external view returns(uint) {
-        return IERC20(_tokAddress).balanceOf(address(this));
+    function getBalance(address tokenAddress) external view returns(uint) {
+        return IERC20(tokenAddress).balanceOf(address(this));
     }
 
-    function withdraw(address _tokAddress, uint amount) external {
-        IERC20 tokkie = IERC20(_tokAddress);
-        tokkie.transfer(msg.sender, amount);
+    function withdraw(address tokenAddress, uint amount) external {
+        IERC20 token = IERC20(tokenAddress);
+        token.transfer(msg.sender, amount);
     }
     receive() external payable{}
 }
