@@ -1,32 +1,33 @@
-//SPDCX-License-Identifier: MIT
+//SPDX-License-Identifier: MIT
+
 pragma solidity >=0.8.10;
 
 import {IERC20} from "@aave/core-v3/contracts/dependencies/openzeppelin/contracts/IERC20.sol";
 
 contract Dex {
-
-    error NotOwner(string message, address caller);
-    address payable owner;
+    
+    address payable public owner;
     modifier onlyOwner() {
-        if(msg.sender != owner) {
-            revert NotOwner("you are not owner", msg.sender);
-        }
+        require(msg.sender == owner, "you are not owner");
         _;
     }
     constructor() {
         owner = payable(msg.sender);
     }
 
+
     IERC20 private constant usdc = IERC20(0x06f0790c687A1bED6186ce3624EDD9806edf9F4E);
     IERC20 public token;
     function setToken(address _tokenAddress) external {
         token = IERC20(_tokenAddress);
     }
+
     uint dexARate = 90;
     uint dexBRate = 100;
 
-    mapping(address => uint) internal usdcBalances;
     mapping(address => uint) internal tokenBalances;
+    mapping(address => uint) internal usdcBalances;
+
     /*deposit functions below assumes you have already approved this contract. Logic:
     1) approve dex contract to spend a certain amount on your behalf.
     This approval is done on remix by using buttons provided by ERC20
@@ -69,10 +70,9 @@ contract Dex {
         return IERC20(_tokAddress).balanceOf(address(this));
     }
 
-    function withdraw(address _tokAddress) external {
+    function withdraw(address _tokAddress, uint amount) external {
         IERC20 tokkie = IERC20(_tokAddress);
         tokkie.transfer(msg.sender, amount);
     }
     receive() external payable{}
-
 }

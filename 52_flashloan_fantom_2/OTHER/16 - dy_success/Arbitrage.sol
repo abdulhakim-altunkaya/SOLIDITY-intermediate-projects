@@ -1,3 +1,4 @@
+
 //SPDX-License-Identifier: MIT
 
 pragma solidity >=0.8.10;
@@ -21,11 +22,8 @@ interface IDex {
 
 contract Arbitrage is FlashLoanSimpleReceiverBase {
     address payable public owner;
-    error NotOwner(string message, address caller);
-    modifier onlyOwner() {
-        if(msg.sender != owner) {
-            revert NotOwner("you are not owner", msg.sender);
-        }
+    modifier onlyOwner(){
+        require(msg.sender == owner, "you are not owner");
         _;
     }
     IERC20 private constant usdc = IERC20(0x06f0790c687A1bED6186ce3624EDD9806edf9F4E);
@@ -33,13 +31,13 @@ contract Arbitrage is FlashLoanSimpleReceiverBase {
     function setToken(address _tokenAddress) external {
         token = IERC20(_tokenAddress);
     }
-
     IDex public dexContract;
     address public dexAddress;
     function setContract(address _dexAddress) external {
         dexContract = IDex(_dexAddress);
         dexAddress = _dexAddress;
     }
+
 
     constructor(address addressProvider) FlashLoanSimpleReceiverBase(IPoolAddressesProvider(addressProvider)) {
         owner = payable(msg.sender);
@@ -73,18 +71,20 @@ contract Arbitrage is FlashLoanSimpleReceiverBase {
         uint16 referralCode = 0;
         POOL.flashLoanSimple(receiverAddress, asset, amount, params, referralCode);
     }
+
     function approveUSDC(uint amount) external returns(bool) {
         return usdc.approve(dexAddress, amount);
-    }
-    function approveToken(uint amount) external returns(bool) {
-        return token.approve(dexAddress, amount);
     }
     function allowanceUSDC() external view returns(uint) {
         return usdc.allowance(address(this), dexAddress);
     }
+    function approveToken(uint amount) external returns(bool) {
+        return token.approve(dexAddress, amount);
+    }
     function allowanceToken() external view returns(uint) {
         return token.allowance(address(this), dexAddress);
     }
+
     function getBalance(address tokAddress) external view returns(uint) {
         return IERC20(tokAddress).balanceOf(address(this));
     }
@@ -93,5 +93,4 @@ contract Arbitrage is FlashLoanSimpleReceiverBase {
         tokkie.transfer(msg.sender, amount);
     }
     receive() external payable{}
-    
 }
