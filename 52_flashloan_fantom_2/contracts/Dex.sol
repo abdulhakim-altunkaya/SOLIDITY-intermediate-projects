@@ -17,7 +17,11 @@ contract Dex {
         owner = payable(msg.sender);
     }
 
-    IERC20 private constant usdc = IERC20(0x06f0790c687A1bED6186ce3624EDD9806edf9F4E);
+    IERC20 public baseToken;
+    function setBaseToken(address _tokenAddress) external {
+        baseToken = IERC20(_tokenAddress);
+    }
+
     IERC20 public token;
     function setToken(address _tokenAddress) external {
         token = IERC20(_tokenAddress);
@@ -25,7 +29,7 @@ contract Dex {
     uint dexARate = 90;
     uint dexBRate = 100;
 
-    mapping(address => uint) internal usdcBalances;
+    mapping(address => uint) internal baseTokenBalances;
     mapping(address => uint) internal tokenBalances;
     /*deposit functions below assumes you have already approved this contract. Logic:
     1) approve dex contract to spend a certain amount on your behalf.
@@ -42,11 +46,11 @@ contract Dex {
     allowance(sender, spender)
     transferFrom(sender, recipient, amount)  
     */
-    function depositUSDC(uint amount) external {
-        usdcBalances[msg.sender] += amount;
-        uint allowance = usdc.allowance(msg.sender, address(this));
+    function depositBaseToken(uint amount) external {
+        baseTokenBalances[msg.sender] += amount;
+        uint allowance = baseToken.allowance(msg.sender, address(this));
         require(allowance >= amount, "allowed/approved amount must be bigger than flashloan amount");
-        usdc.transferFrom(msg.sender, address(this), amount);
+        baseToken.transferFrom(msg.sender, address(this), amount);
     }
 
     function depositToken(uint amount) external {
@@ -57,12 +61,12 @@ contract Dex {
     }
 
     function buyToken() external {
-        uint tokenToReceive = ((usdcBalances[msg.sender] / dexARate) * 100) * (10**12);
+        uint tokenToReceive = ((baseTokenBalances[msg.sender] / dexARate) * 100) * (10**12);
         token.transfer(msg.sender, tokenToReceive);
     }
     function sellToken() external {
-        uint usdcToReceive = ((tokenBalances[msg.sender] * dexBRate) / 100) / (10**12);
-        usdc.transfer(msg.sender, usdcToReceive);
+        uint baseTokenToReceive = ((tokenBalances[msg.sender] * dexBRate) / 100) / (10**12);
+        baseToken.transfer(msg.sender, baseTokenToReceive);
     }
 
     function getBalance(address _tokAddress) external view returns(uint) {

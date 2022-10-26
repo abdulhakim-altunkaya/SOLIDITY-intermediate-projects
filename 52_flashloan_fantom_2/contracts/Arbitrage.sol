@@ -14,7 +14,7 @@ https://github.com/aave/aave-v3-core/blob/master/contracts/dependencies/openzepp
 
 interface IDex {
     function depositToken(uint amount) external;
-    function depositUSDC(uint amount) external;
+    function depositBaseToken(uint amount) external;
     function buyToken() external;
     function sellToken() external;
 }
@@ -28,7 +28,10 @@ contract Arbitrage is FlashLoanSimpleReceiverBase {
         }
         _;
     }
-    IERC20 private constant usdc = IERC20(0x06f0790c687A1bED6186ce3624EDD9806edf9F4E);
+    IERC20 public baseToken;
+    function setBaseToken(address _tokenAddress) external {
+        baseToken = IERC20(_tokenAddress);
+    }
     IERC20 public token;
     function setToken(address _tokenAddress) external {
         token = IERC20(_tokenAddress);
@@ -53,7 +56,7 @@ contract Arbitrage is FlashLoanSimpleReceiverBase {
         bytes calldata params
     ) external override returns(bool) {
         //This contract now has the funds. Arbitrage operation:
-        dexContract.depositUSDC(1000000000);
+        dexContract.depositBaseToken(1000000000);
         dexContract.buyToken();
         dexContract.depositToken(token.balanceOf(address(this)));
         dexContract.sellToken();
@@ -73,14 +76,14 @@ contract Arbitrage is FlashLoanSimpleReceiverBase {
         uint16 referralCode = 0;
         POOL.flashLoanSimple(receiverAddress, asset, amount, params, referralCode);
     }
-    function approveUSDC(uint amount) external returns(bool) {
-        return usdc.approve(dexAddress, amount);
+    function approveBaseToken(uint amount) external returns(bool) {
+        return baseToken.approve(dexAddress, amount);
     }
     function approveToken(uint amount) external returns(bool) {
         return token.approve(dexAddress, amount);
     }
-    function allowanceUSDC() external view returns(uint) {
-        return usdc.allowance(address(this), dexAddress);
+    function allowanceBaseToken() external view returns(uint) {
+        return baseToken.allowance(address(this), dexAddress);
     }
     function allowanceToken() external view returns(uint) {
         return token.allowance(address(this), dexAddress);
