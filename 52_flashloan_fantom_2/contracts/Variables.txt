@@ -1,0 +1,28 @@
+
+
+Storage
+
+
+calldata
+It is data location for function parameters only
+Which means you can see a calldata variable only in function parameters.
+calldata variables are immutable/non-modifiable 
+calldata variables are non-persistant, they are deleted when function execution finishes.
+The space for calldata variable values is allocated for the external function caller.
+
+
+Memory
+It is data location for function parameters and also function implementation
+Which means, you can see a memory variable inside function parameters and also inside function implementation.
+
+Memory variables are also non-persistant. They are deleted when function execution finishes.
+The space for memory variable values is allocated for the contract. 
+
+FURTHER READING:
+Slots
+Assignments from one another
+Reference type/value type
+
+Data location (memory, storage, and calldata) needs to be specified for reference type variables.
+Since uint is a value type, it is not specified.
+Stack is also data location for storing small local variables. 
