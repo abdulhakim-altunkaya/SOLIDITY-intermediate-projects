@@ -18,7 +18,7 @@ contract Dex {
 
     IERC20 public baseToken;
     function setBaseToken(address _tokenAddress) external {
-        baseToken = IERC20(baseToken);
+        baseToken = IERC20(_tokenAddress);
     }
 
     IERC20 public token;
@@ -80,9 +80,9 @@ contract Dex {
         return balance / (10**6);
     }
 
-    function withdraw(address _tokenAddress, _amount) external {
+    function withdraw(address _tokenAddress, uint _amount) external {
         IERC20 tokkie = IERC20(_tokenAddress);
-        tokkie.transfer(msg.sender, _amount)
+        tokkie.transfer(msg.sender, _amount);
     }
 
     receive() external payable{}
