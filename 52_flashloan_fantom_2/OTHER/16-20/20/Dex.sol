@@ -7,24 +7,23 @@ contract Dex {
     address payable public owner;
     error NotOwner(string message, address caller);
     modifier onlyOwner() {
-        if(msg.sender != owner) {
+        if(msg.sender != owner ) {
             revert NotOwner("you are not owner", msg.sender);
         }
         _;
     }
-
     constructor() {
         owner = payable(msg.sender);
+    }
+
+    IERC20 public baseToken;
+    function setBaseToken(address _tokenAddress) external {
+        baseToken = IERC20(_tokenAddress);
     }
 
     IERC20 public token;
     function setToken(address _tokenAddress) external {
         token = IERC20(_tokenAddress);
-    }
-
-    IERC20 public baseToken;
-    function setBaseToken(address _baseTokenAddress) external {
-        baseToken = IERC20(_baseTokenAddress);
     }
 
     uint dexARate = 90;
@@ -47,6 +46,7 @@ contract Dex {
     allowance(sender, spender)
     transferFrom(sender, recipient, amount)  
     */
+
     function depositBaseToken(uint _amount) external {
         baseTokenBalances[msg.sender] += _amount;
         uint allowance = baseToken.allowance(msg.sender, address(this));
@@ -71,12 +71,11 @@ contract Dex {
         baseToken.transfer(msg.sender, baseTokenToReceive);
     }
 
-    function getBal18(address _tokenAddress) external view returns(uint) {
+    function getBalance18(address _tokenAddress) external view returns(uint) {
         uint balance = IERC20(_tokenAddress).balanceOf(address(this));
         return balance / (10**18);
     }
-
-    function getBal6(address _tokenAddress) external view returns(uint) {
+    function getBalance6(address _tokenAddress) external view returns(uint) {
         uint balance = IERC20(_tokenAddress).balanceOf(address(this));
         return balance / (10**6);
     }
@@ -86,5 +85,6 @@ contract Dex {
         tokkie.transfer(msg.sender, _amount);
     }
 
-    receive() external payable {}
+    receive() external payable{}
+
 }

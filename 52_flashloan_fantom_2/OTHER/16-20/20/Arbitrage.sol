@@ -22,28 +22,26 @@ interface IDex {
 contract Arbitrage is FlashLoanSimpleReceiverBase {
     address payable public owner;
     error NotOwner(string message, address caller);
-    modifier onlyOwner() {
+    modifier onlyOwner(){
         if(msg.sender != owner) {
-            revert NotOwner("you are not owner", msg.sender)
+            revert NotOwner("you are not owner", msg.sender);
         }
         _;
     }
 
+    IERC20 public baseToken;
+    function setBaseToken(address _tokenAddress) external {
+        baseToken = IERC20(_tokenAddress);
+    }
+    IERC20 public token;
+    function setToken(address _tokenAddress) external {
+        token = IERC20(_tokenAddress);
+    }
     IDex public dexContract;
     address public dexAddress;
     function setContract(address _contractAddress) external {
         dexContract = IDex(_contractAddress);
         dexAddress = _contractAddress;
-    }
-
-    IERC20 public baseToken;
-    function setBaseToken(address _baseTokenAddress) external {
-        baseToken = IERC20(_baseTokenAddress);
-    }
-
-    IERC20 public token;
-    function setToken(address _tokenAddress) external {
-        token = IERC20(_tokenAddress);
     }
 
     constructor(address _addressProvider) FlashLoanSimpleReceiverBase(IPoolAddressesProvider(_addressProvider)) {
@@ -70,9 +68,9 @@ contract Arbitrage is FlashLoanSimpleReceiverBase {
         return true;
     }
 
-    function requestFlashLoan(address _tokenAddress, uint _amount) {
+    function requestFlashLoan(address _tokenA, uint _amount) public {
         address receiverAddress = address(this);
-        address asset = _tokenAddress;
+        address asset = _tokenA;
         uint amount = _amount;
         bytes memory params = "";
         uint16 referralCode = 0;
@@ -81,14 +79,11 @@ contract Arbitrage is FlashLoanSimpleReceiverBase {
 
     function approveBaseToken(uint _amount) external returns(bool) {
         return baseToken.approve(dexAddress, _amount);
-        //approve(spender, amount)
     }
     function approveToken(uint _amount) external returns(bool) {
         return token.approve(dexAddress, _amount);
     }
-
     function allowanceBaseToken() external view returns(uint) {
-        //allowance(owner, spender)
         return baseToken.allowance(address(this), dexAddress);
     }
     function allowanceToken() external view returns(uint) {
@@ -98,12 +93,10 @@ contract Arbitrage is FlashLoanSimpleReceiverBase {
     function getBalance(address _tokenAddress) external view returns(uint) {
         return IERC20(_tokenAddress).balanceOf(address(this));
     }
-
     function withdraw(address _tokenAddress, uint _amount) external {
-        IERC20 tokkie  = IERC20(_tokenAddress);
+        IERC20 tokkie = IERC20(_tokenAddress);
         tokkie.transfer(msg.sender, _amount);
     }
 
     receive() external payable{}
-    
 }
