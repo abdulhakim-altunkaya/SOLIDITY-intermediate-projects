@@ -11,12 +11,12 @@ contract FlashLoan is FlashLoanSimpleReceiverBase {
     address payable public owner;
     modifier onlyOwner() {
         if(msg.sender != owner) {
-            revert NotOwner();
+            revert NotOwner("you are not owner", msg.sender);
         }
         _;
     }
 
-    constructor(address _addressProvider) FlashLoanSimpleReceiverBase(IPoolAddressesProvider(_addressProvider0)) {
+    constructor(address _addressProvider) FlashLoanSimpleReceiverBase(IPoolAddressesProvider(_addressProvider)) {
         owner = payable(msg.sender);
     }
 
