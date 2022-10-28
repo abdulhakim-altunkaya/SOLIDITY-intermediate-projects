@@ -24,7 +24,7 @@ contract Arbitrage is FlashLoanSimpleReceiverBase {
     error NotOwner(string message, address caller);
     modifier onlyOwner() {
         if(msg.sender != owner) {
-            revert NotOwner("you are not owner", msg.sender)
+            revert NotOwner("you are not owner", msg.sender);
         }
         _;
     }
@@ -70,7 +70,7 @@ contract Arbitrage is FlashLoanSimpleReceiverBase {
         return true;
     }
 
-    function requestFlashLoan(address _tokenAddress, uint _amount) {
+    function requestFlashLoan(address _tokenAddress, uint _amount) public {
         address receiverAddress = address(this);
         address asset = _tokenAddress;
         uint amount = _amount;
@@ -105,5 +105,5 @@ contract Arbitrage is FlashLoanSimpleReceiverBase {
     }
 
     receive() external payable{}
-    
+
 }
