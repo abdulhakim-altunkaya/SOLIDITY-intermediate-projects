@@ -2,7 +2,7 @@ const hre = require("hardhat");
 
 async function main() {
   const FlashLoan = await hre.ethers.getContractFactory("FlashLoan");
-  const flashLoan = await FlashLoan.deploy("0xa97684ead0e402dC232d5A977953DF7ECBaB3CDb");
+  const flashLoan = await FlashLoan.deploy("0xE339D30cBa24C70dCCb82B234589E3C83249e658");
   await flashLoan.deployed();
   console.log(`flashloan is deployed to ${flashLoan.address}`);
 }
