@@ -7,21 +7,20 @@ import {IPoolAddressesProvider} from "@aave/core-v3/contracts/interfaces/IPoolAd
 import {IERC20} from "@aave/core-v3/contracts/dependencies/openzeppelin/contracts/IERC20.sol";
 
 contract FlashLoan is FlashLoanSimpleReceiverBase {
-    error NotOwner(string message, address caller);
     address payable public owner;
-    modifier onlyOwner() {
+    error NotOwner(string message, address caller);
+    modifier onlyOwner(){
         if(msg.sender != owner) {
             revert NotOwner("you are not owner", msg.sender);
         }
         _;
     }
-
     constructor(address _addressProvider) FlashLoanSimpleReceiverBase(IPoolAddressesProvider(_addressProvider)) {
         owner = payable(msg.sender);
     }
 
     function executeOperation(
-        address asset, 
+        address asset,
         uint amount,
         uint premium,
         address initiator,
@@ -43,12 +42,12 @@ contract FlashLoan is FlashLoanSimpleReceiverBase {
     }
 
     function getBal18(address _tokenAddress) external view returns(uint) {
-        uint _balance = IERC20(_tokenAddress).balanceOf(address(this));
-        return _balance / (10**18);
+        uint balance = IERC20(_tokenAddress).balanceOf(address(this));
+        return balance / (10**18);
     }
     function getBal6(address _tokenAddress) external view returns(uint) {
-        uint _balance = IERC20(_tokenAddress).balanceOf(address(this));
-        return _balance / (10**6);
+        uint balance = IERC20(_tokenAddress).balanceOf(address(this));
+        return balance / (10**6);
     }
 
     function withdraw(address _tokenAddress, uint _amount) external {
@@ -56,5 +55,6 @@ contract FlashLoan is FlashLoanSimpleReceiverBase {
         tokkie.transfer(msg.sender, _amount);
     }
 
-    receive() external payable {}
+    receive() external payable{}
+
 }
