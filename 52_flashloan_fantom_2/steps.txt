@@ -75,7 +75,8 @@ module.exports = {
   PRIVATE_KEY_GOERLI="e4d9ebd93bb2e1e3799f761d76c6192392a986fb64c68417eeb2eda670c84383"
   PROVIDER_URL_MUMBAI=`https://polygon-mumbai.g.alchemy.com/v2/JMS-sd2ahj5_1MAsO6GCT77JQ16LiJOA`
   PROVIDER_URL_GOERLI=`https://eth-goerli.g.alchemy.com/v2/y4tP-sLX0TTuIzbALxBr8AyrEZDOH3Ef`
-  PROVIDER_URL_FANTOM=`https://fantom-testnet.s.chainbase.online/v1/2G8K0Aa3WVTSSGCSHq2Hx3NyQNt`
+  PROVIDER_URL_FANTOM_TEST_1=`https://fantom-testnet.s.chainbase.online/v1/2G8K0Aa3WVTSSGCSHq2Hx3NyQNt`
+  PROVIDER_URL_FANTOM_TEST_2=`https://rpc.ankr.com/fantom_testnet`
   PROVIDER_URL_AVAX=`https://avax.getblock.io/testnet/ext/bc/C/rpc?api_key=b0cbe8fa-d042-4b86-8218-b6a438989a65`
   PROVIDER_URL_FUJI_2=`wss://api.avax-test.network/ext/bc/C/ws`
   PROVIDER_URL_FUJI_3=`https://api.avax-test.network/`
