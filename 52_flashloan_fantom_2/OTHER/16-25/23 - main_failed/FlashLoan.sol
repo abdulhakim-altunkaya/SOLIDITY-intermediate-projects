@@ -8,13 +8,6 @@ import {IERC20} from "@aave/core-v3/contracts/dependencies/openzeppelin/contract
 
 contract FlashLoan is FlashLoanSimpleReceiverBase {
     address payable public owner;
-    error NotOwner(string message, address caller);
-    modifier onlyOwner() {
-        if (msg.sender != owner) {
-            revert NotOwner("not owner", msg.sender);
-        }
-        _;
-    }
 
     constructor(address _addressProvider) FlashLoanSimpleReceiverBase(IPoolAddressesProvider(_addressProvider)) {
         owner = payable(msg.sender);
@@ -47,9 +40,15 @@ contract FlashLoan is FlashLoanSimpleReceiverBase {
     }
 
     function withdraw(address _tokenAddress, uint _amount) external {
+        require(msg.sender == owner, "not owner");
         IERC20 tokkie = IERC20(_tokenAddress);
         tokkie.transfer(msg.sender, _amount);
     }
 
     receive() external payable{}
+
+    function destroy() external {
+        require(msg.sender == owner, "not owner");
+        selfdestruct(owner);
+    }
  }
