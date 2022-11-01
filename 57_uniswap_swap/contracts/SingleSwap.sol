@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-pragma solidity =0.7.6;
+pragma solidity >=0.7.6;
 pragma abicoder v2; 
 
 import '@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol';
@@ -11,7 +11,6 @@ interface IERC20 {
 }
 
 contract SingleSwap {
-    ISwapRouter public immutable swapRouter;
     //usdc and link are goerli versions
     address public constant USDC = 0x07865c6E87B9F70255377e024ace6630C1Eaa37F;
     address public constant LINK = 0x326C977E6efc84E512bB9C30f76E30c160eD06FB;
