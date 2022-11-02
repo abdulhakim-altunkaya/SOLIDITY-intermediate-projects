@@ -40,7 +40,7 @@ contract SingleSwap {
 
     function swapExactOutputSingle(uint amountOut, uint amountInMaximum) external returns(uint amountIn) {
         linkToken.approve(address(swapRouter), amountInMaximum);
-        ISwapRouter.ExactOutputSingleParams({
+        ISwapRouter.ExactOutputSingleParams memory params = ISwapRouter.ExactOutputSingleParams({
             tokenIn: LINK,
             tokenOut: WETH,
             fee: poolFee,
@@ -57,6 +57,6 @@ contract SingleSwap {
         }
     }
 
-    
+
 
 }
