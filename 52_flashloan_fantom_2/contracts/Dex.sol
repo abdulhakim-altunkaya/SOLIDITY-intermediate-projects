@@ -85,15 +85,15 @@ contract Dex  {
         return balance / (10**6);
     }
 
-    function withdraw(address _tokenAddress) external view returns(uint) {
+    function withdraw(address _tokenAddress, uint _amount) external {
         IERC20 tokkie = IERC20(_tokenAddress);
         tokkie.transfer(msg.sender, _amount);
     }
 
-    function withdraw18() external view returns(uint) {
+    function withdraw18() external {
         token.transfer(msg.sender, token.balanceOf(address(this)));
     }
-    function withdraw6() external view returns(uint) {
+    function withdraw6() external {
         baseToken.transfer(msg.sender, baseToken.balanceOf(address(this)));
     }
 
