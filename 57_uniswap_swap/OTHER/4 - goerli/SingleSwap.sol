@@ -13,13 +13,13 @@ interface IERC20 {
 }
 
 contract SingleSwap {
-    //GOERLI VERSIONS:
+    //GOERLI versions:
     address public constant USDC = 0x07865c6E87B9F70255377e024ace6630C1Eaa37F;
     address public constant LINK = 0x326C977E6efc84E512bB9C30f76E30c160eD06FB;
     address public constant WETH = 0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6;
     IERC20 usdcToken = IERC20(USDC);
     IERC20 wethToken = IERC20(WETH);
-    /*
+/*
     IERC20 public inputToken;
     function setBaseToken(address _inputToken) external {
         inputToken = IERC20(_inputToken);
@@ -31,6 +31,7 @@ contract SingleSwap {
     }
 */
     ISwapRouter public immutable swapRouter = ISwapRouter(0xE592427A0AEce92De3Edee1F18E0157C05861564);
+
     uint24 public constant poolFee = 3000;
 
     function swapExactInputSingle(uint amountIn) external returns(uint amountOut) {
@@ -41,7 +42,7 @@ contract SingleSwap {
             tokenIn: USDC,
             tokenOut: WETH,
             fee: poolFee,
-            recipient: 0x547Fdf051df6454322cb7100A4d8edDE8B17a45E,
+            recipient:0x547Fdf051df6454322cb7100A4d8edDE8B17a45E,
             deadline: block.timestamp,
             amountIn: amountIn,
             amountOutMinimum: 0,
@@ -72,19 +73,23 @@ contract SingleSwap {
         uint balance = IERC20(_tokenAddress).balanceOf(address(this));
         return balance / (10**18);
     }
+
     function getBal6(address _tokenAddress) external view returns(uint) {
         uint balance = IERC20(_tokenAddress).balanceOf(address(this));
         return balance / (10**6);
     }
-    function withdrawInput() external {
+
+    function withdrawINPUT() external {
         usdcToken.transfer(msg.sender, usdcToken.balanceOf(address(this)));
     }
+
     function withdrawOutput() external {
-        wethToken.transfer(msg.sender, wethToken.balanceOf(address(this)));
+        IERC20(WETH).transfer(msg.sender, IERC20(WETH).balanceOf(address(this)));
     }
-    function destroy() external {
-        selfdestruct(owner);
-    }
+    
     receive() external payable{}
 
+    function destroy() external {
+        selfdestruct(payable(msg.sender));
+    }
 }

@@ -16,7 +16,7 @@ contract FlashLoan is FlashLoanSimpleReceiverBase {
         _;
     }
 
-    constructor(addresss _addressProvider) FlashLoanSimpleReceiverBase(IPoolAddressesProvider(_addressProvider)) {
+    constructor(address _addressProvider) FlashLoanSimpleReceiverBase(IPoolAddressesProvider(_addressProvider)) {
         owner = payable(msg.sender);
     }
 
