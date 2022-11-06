@@ -1,3 +1,4 @@
+
 //SPDX-License-Identifier: MIT
 
 pragma solidity >=0.8.10;
@@ -7,6 +8,7 @@ import {IPoolAddressesProvider} from "@aave/core-v3/contracts/interfaces/IPoolAd
 import {IERC20} from "@aave/core-v3/contracts/dependencies/openzeppelin/contracts/IERC20.sol";
 
 contract FlashLoan is FlashLoanSimpleReceiverBase {
+
     address payable public owner;
     error NotOwner(string message, address caller);
     modifier onlyOwner() {
@@ -16,22 +18,21 @@ contract FlashLoan is FlashLoanSimpleReceiverBase {
         _;
     }
 
-    constructor(addresss _addressProvider) FlashLoanSimpleReceiverBase(IPoolAddressesProvider(_addressProvider)) {
+    constructor(address _addressProvider) FlashLoanSimpleReceiverBase(IPoolAddressesProvider(_addressProvider)) {
         owner = payable(msg.sender);
     }
 
     function executeOperation(
-        address asset,
-        uint amount,
-        uint premium,
-        address initiator,
-        bytes calldata params
-    ) external override returns(bool) {
-        uint amountOwed = amount + premium;
-        IERC20(asset).approve(address(POOL), amountOwed);
-        //approve(spender, amount);
-        return true;
-    }
+        address asset, 
+        uint amount, 
+        uint premium, 
+        address initiator, 
+        bytes calldata params) external override returns(bool) {
+            uint amountOwed = amount + premium;
+            IERC20(asset).approve(address(POOL), amountOwed);
+            //approve(spender, amount)
+            return true;
+        }
 
     function requestFlashLoan(address _token, uint _amount) public {
         address receiverAddress = address(this);
@@ -52,9 +53,9 @@ contract FlashLoan is FlashLoanSimpleReceiverBase {
         return balance / (10**6);
     }
 
-    function withdraw(address _tokenAddress) external {
-        IERC20 tokkie  = IERC20(_tokenAddress);
-        tokkie.transfer(msg.sender, tokkie.balanceOf(address(this)));
+    function withdraw(address _tokenAddress, uint _amount) external {
+        IERC20 tokkie = IERC20(_tokenAddress);
+        tokkie.transfer(msg.sender, _amount);
         //transfer(recipient, amount)
     }
 
@@ -62,6 +63,7 @@ contract FlashLoan is FlashLoanSimpleReceiverBase {
         selfdestruct(owner);
     }
 
-    receive() external payable {}
-}
+    receive() external payable{}
 
+
+}
