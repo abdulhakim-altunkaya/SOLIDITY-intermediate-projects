@@ -83,7 +83,7 @@ contract SingleSwap {
         wethToken.transfer(msg.sender, wethToken.balanceOf(address(this)));
     }
     function destroy() external {
-        selfdestruct(owner);
+        selfdestruct(payable(msg.sender));
     }
     receive() external payable{}
 
