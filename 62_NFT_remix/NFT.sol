@@ -26,7 +26,7 @@ interface IERC721Receiver {
     function onERC721Received(address operator, address from, uint tokenId, bytes calldata data) external returns (bytes4);
 }
 
-contract NFT is IERC721 {
+contract ERC721 is IERC721 {
     event Transfer(address indexed from, address indexed to, uint indexed id);
     event Approval(address indexed owner, address indexed spender, uint indexed id);
     event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
@@ -54,11 +54,11 @@ contract NFT is IERC721 {
     //returns the number of nft owned by the "owner"
     function balanceOf(address owner) external view returns(uint balance) {
         require(owner != address(0), "zero address");
-        return _balanceOf[owner]
+        return _balanceOf[owner];
     }
 
     function ownerOf(uint tokenId) external view returns(address owner) {
-        owner = _ownerOf(tokenId);
+        owner = _ownerOf[tokenId];
         require(owner != address(0), "zero address");
     }
 
@@ -105,9 +105,8 @@ contract NFT is IERC721 {
         transferFrom(from, to, tokenId);
         require(
             to.code.length == 0 || 
-            IERC721Receiver(to).onERC721Received(msg.sender, from, tokenId, "") == IERC721Receiver.onERC721Received.selector, "unsafe recipient")
-        )
-
+            IERC721Receiver(to).onERC721Received(msg.sender, from, tokenId, "") == 
+            IERC721Receiver.onERC721Received.selector, "unsafe recipient");
     }
 
     function onERC721Received(address operator, address from, uint tokenId, bytes calldata data) external returns(bytes4) {
@@ -116,6 +115,42 @@ contract NFT is IERC721 {
 
     function safeTransferFrom(address from, address to, uint tokenId, bytes calldata data) external {
         //this function is same as above but if "to" is a contract, then it calls "onERC721Received":
+        transferFrom(from, to, tokenId);
+        require(to.code.length == 0 || 
+            IERC721Receiver(to).onERC721Received(msg.sender, from, tokenId, data) == 
+            IERC721Receiver.onERC721Received.selector, "unsafe recipient"
+        );
+    }
 
+    function _mint(address to, uint tokenId) internal {
+        require(to != address(0), "zero address");
+
+        //here it is weird. If tokenID is not minted, then the owner
+        //will zero address.
+        require(_ownerOf[tokenId] == address(0), "token already minted");
+        _balanceOf[to] ++;
+        _ownerOf[tokenId] = to;
+        emit Transfer(address(0), to, tokenId);
+    }
+
+    function _burn(uint tokenId) internal {
+        address owner = _ownerOf[tokenId];
+        require(owner != address(0), "token is not minted yet");
+        _balanceOf[owner] --;
+        delete _ownerOf[tokenId];
+        delete _approvals[tokenId];
+        emit Transfer(owner, address(0), tokenId);
+    }
+
+}
+
+contract MyNFT is ERC721 {
+    function mint(address to, uint tokenId) external {
+        _mint(to, tokenId);
+    }
+
+    function burn(uint tokenId) external {
+        require(msg.sender == _ownerOf[tokenId], "not owner");
+        _burn(tokenId);
     }
 }
