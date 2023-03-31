@@ -73,12 +73,12 @@ Slot itself is in bytes32 data type.
 
 library StorageSlot {
     struct AddressSlot {
-        address myValue;
+        address value;
     }
 
-    function getAddressSlot(bytes32 _slot) internal pure returns(AddressSlot storage r) {
+    function getAddressSlot(bytes32 slot) internal pure returns(AddressSlot storage r) {
         assembly {
-            r.slot := _slot
+            r.slot := slot
         }
     }
 }
@@ -86,11 +86,11 @@ library StorageSlot {
 contract TestSlot {
     bytes32 public constant SLOT = keccak256("TEST_SLOT");
 
-    function getSlot() external view returns(address) {
-        return StorageSlot.getAddressSlot(SLOT).myValue
+    function getSlot() external view returns (address) {
+        return StorageSlot.getAddressSlot(SLOT).value;
     }
 
     function writeSlot(address _addr) external {
-        StorageSlot.getAddressSlot(SLOT).myValue = _addr;
+        StorageSlot.getAddressSlot(SLOT).value = _addr;
     }
 }
