@@ -6,14 +6,11 @@ import {FlashLoanSimpleReceiverBase} from "@aave/core-v3/contracts/flashloan/bas
 import {IPoolAddressesProvider} from "@aave/core-v3/contracts/interfaces/IPoolAddressesProvider.sol";
 import {IERC20} from "@aave/core-v3/contracts/dependencies/openzeppelin/contracts/IERC20.sol";
 
-contract Flashy is FlashLoanSimpleReceiverBase { 
+contract FlashLoan is FlashLoanSimpleReceiverBase { 
 
     address payable public owner;
-    error NotOwner(address caller, string message);
     modifier onlyOwner() {
-        if(msg.sender != owner) {
-            revert NotOwner(msg.sender, "you are not owner");
-        }
+        require(msg.sender == owner, "you are not owner");
         _;
     }
 
@@ -22,15 +19,17 @@ contract Flashy is FlashLoanSimpleReceiverBase {
     }
 
     function executeOperation(
-        address asset, //asset we want to borrow
+        address asset, 
         uint amount, 
-        uint premium, //the commission to pay back to aave
+        uint premium, 
         address initiator, 
         bytes calldata params
     ) external override returns(bool) {
-        uint amountOwed = amount + premium;
-        IERC20(asset).approve(address(POOL), amount);
-        return true;
+       
+       
+       uint amountOwed = amount + premium;
+       IERC20(asset).approve(address(POOL), amountOwed);
+       return true;
     }
 
     function requestFlashLoan(address _token, uint _amount) public {
@@ -39,15 +38,17 @@ contract Flashy is FlashLoanSimpleReceiverBase {
         uint amount = _amount;
         bytes memory params = "";
         uint16 referralCode = 0;
-        POOL.flashLoanSimple(receiverAddress, asset, amount, params, referralCode);    
-    }  
-
-    function getTokenBalance(address _asset) external view returns(uint){
-        return IERC20(_asset).balanceOf(address(this)) / (10**18);
+        POOL.flashLoanSimple(receiverAddress, asset, amount, params, referralCode);
     }
 
-    function withdraw(address _asset, uint _amount) external onlyOwner {
-        IERC20(_asset).transfer(msg.sender, _amount*(10**18));
+    function getBalance(address tokenAddress) external view onlyOwner returns(uint) {
+        return IERC20(tokenAddress).balanceOf(address(this));
     }
 
- }
+    function withdraw(address tokenAddress, uint amount) external onlyOwner {
+        IERC20 token = IERC20(tokenAddress);
+        token.transfer(msg.sender, amount);
+    }
+
+}
+  

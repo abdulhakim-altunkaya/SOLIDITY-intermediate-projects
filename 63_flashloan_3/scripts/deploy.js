@@ -8,12 +8,12 @@ const hre = require("hardhat");
 
 async function main() {
 
-  const Flashy = await hre.ethers.getContractFactory("Flashy");
-  const flashy = await Flashy.deploy("0xC809bea009Ca8DAA680f6A1c4Ca020D550210736");
+  const FlashLoan = await hre.ethers.getContractFactory("FlashLoan");
+  const flashLoan = await FlashLoan.deploy();
 
-  await flashy.deployed();
+  await flashLoan.deployed();
 
-  console.log(`Flashy deployed to ${flashy.address}`);
+  console.log(`flashLoan  ${flashLoan.address}`);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
