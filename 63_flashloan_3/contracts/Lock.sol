@@ -2,7 +2,6 @@
 
 pragma solidity ^0.8.9;
 
-contract FlashLoan {
-    uint public unlockTime = 778787;
-    
+contract Lock {
+    uint public unlockTime = 754854;
 }
