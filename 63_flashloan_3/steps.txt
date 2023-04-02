@@ -1,3 +1,9 @@
+1-Finish flashloan file
+2-finish deploy.js find the PoolAddressesProvider-Fantom address on AAVE and paste it inside deploy.js
+3-deploy contract 
+4- go to remix, copy paste contract and upload it on deployed address
+5- put some coins inside the contract before withdrawing flashloan
+
 ☔ We will create a custom function requesting funds from Aave. such as "flashloan()"
 For aave flashloan we need to implement "IFlashLoanSimpleReceiverBase.sol"
 and we need to include "executeOperation()" function inside our contract. 
@@ -36,7 +42,7 @@ then go requestFlashloan function and request 1000000000 (1000 usdc)
 If you want to replace dai, replace it with another token of 18 decimals. 
 If you want to replace usdc, replace it with another token of 6 decimals.
 
-♿ npm install hardhat ethers dotenv "@aave/core-v3" "@nomicfoundation/hardhat-toolbox" "@nomiclabs/hardhat-ethers" "@nomicfoundation/hardhat-network-helpers@^1.0.0"
+♿ npm install hardhat "ethers@5.7.2" dotenv "@aave/core-v3" "@nomicfoundation/hardhat-toolbox" "@nomiclabs/hardhat-ethers" "@nomicfoundation/hardhat-network-helpers@^1.0.0"
 
 ♿ replenish your metamask account from aave faucet, grab some usdc and dai
 staging.aave.com/faucet/
@@ -95,7 +101,7 @@ SNOWTRACE_DAI="0xFc7215C9498Fc12b22Bc0ed335871Db4315f03d3"
 
 TESTNET_FANTOM=""
 AAVE_POOLADDRESSPROVIDER="0xE339D30cBa24C70dCCb82B234589E3C83249e658"
-USDT="0x1b901d3C9D4ce153326BEeC60e0D4A2e8a9e3cE3"
+USDT="0x6e642065B9976FbDF94aB373a4833A48F040BfF3"
 DAI="0xc469ff24046779DE9B61Be7b5DF91dbFfdF1AE02"
 USDC="0x06f0790c687A1bED6186ce3624EDD9806edf9F4E"
 CURVE="0xAC1a9503D1438B56BAa99939D44555FC2dC286Fc";
@@ -104,6 +110,10 @@ AAVE="0x2a6202B83Bd2562d7460F91E9298abC27a2F0a95";
 POLYGON_MAINNET:
 AAVE_ADDRESSPROVIDER = "0xa97684ead0e402dC232d5A977953DF7ECBaB3CDb"
 USDT = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F"
+
+Polygon-Testnet:
+USDT="0xAcDe43b9E5f72a4F554D4346e69e8e7AC8F352f0"
+CRV="0x0799ea468F812e40DBABe77B381cac105Da500Cd"
 
 FOR REMIX IN CASE YOU NEED:
 import {FlashLoanSimpleReceiverBase} from "https://github.com/aave/aave-v3-core/blob/master/contracts/flashloan/base/FlashLoanSimpleReceiverBase.sol";
