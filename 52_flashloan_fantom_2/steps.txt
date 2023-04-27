@@ -36,9 +36,7 @@ then go requestFlashloan function and request 1000000000 (1000 usdc)
 If you want to replace dai, replace it with another token of 18 decimals. 
 If you want to replace usdc, replace it with another token of 6 decimals.
 
-♿ npm install hardhat ethers dotenv
-npm install "@aave/core-v3" 
-npm install "@nomicfoundation/hardhat-toolbox"
+♿ npm install hardhat ethers dotenv "@aave/core-v3" "@nomicfoundation/hardhat-toolbox"
 
 ♿ replenish your metamask account from aave faucet, grab some usdc and dai
 staging.aave.com/faucet/
