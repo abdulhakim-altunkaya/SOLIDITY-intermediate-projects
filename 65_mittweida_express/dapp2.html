@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/web3@latest/dist/web3.min.js"></script>
+    <title>Express-Metamask-Web3</title>
+    
+</head>
+<body>
+    <h1>Mittweida Project Express</h1>
+    <button onclick="connectMetamask()">Connect Metamask</button>
+    <p id="accountNumber"></p>
+    <p id="blockNumber"></p>
+
+    <button onclick="homepage()">HOMEPAGE</button> <br><br><br>
+    <button id="send" onclick="sendTx1()">SEND 1</button> <br>
+    <input type = "text" id = "recipientAddress">
+    <label for = "recipientAddress">Recipient Address</label>
+    <input type = "text" id = "amount">
+    <label for = "amount">Amount</label>
+
+    <br><br><br><br>
+
+    <button id="send2" onclick="sendTx2()">SEND 2</button> <br>
+
+    <script>
+
+        const sendTx1 = () => {
+            ethereum.request({method: 'eth_requestAccounts'}).then(function(res){
+                console.log(res);
+                window.web3 = new Web3(window.ethereum);
+                amount = document.getElementById("amount").value;
+                address = document.getElementById("recipientAddress").value;
+                console.log("amount: " + amount);
+                console.log("address: " + address);
+                web3.eth.sendTransaction({
+                    from: res[0],
+                    to: address,
+                    value: amount
+                }).then(function(res){
+                    console.log(res);
+                })
+            })
+        }            
+        
+        const sendTx2 = () => {
+            if(window.ethereum){
+                ethereum.request({method: 'eth_requestAccounts'}).then(function(account){
+                    console.log("Accounts: " + account);
+                    const transactionParameters = {
+                        // nonce: '0x00', // is ignored by MetaMask. MetaMas sets the correct nonce itself.
+                        // gasPrice: '0x60DB88400', // optional 26 GWei, Can be customized during transaction confirmation in MetaMask
+                        // gas: '0x5710', // Optional customizalbe in MetaMask during confirmation
+                        to: '0x547Fdf051df6454322cb7100A4d8edDE8B17a45E', // empty if smart contract creation
+                        from: account[0],
+                        value: '1', // 10 ETH
+                        data: "", //optional
+                        chainId: '0xfa2' // currently ignored by MetaMask Mainnet, Goerli, Sepolia, Ganache, etc. 
+                    };
+
+                    ethereum.request({
+                        method: "eth_sendTransaction",
+                        params: [transactionParameters],
+                    }).then((result) => {
+                        console.log(result);
+                    })
+                })
+            } 
+        }
+
+        const homepage = () => {
+            window.location.href = "/";
+        }
+
+    </script>
+</body>
+</html>
