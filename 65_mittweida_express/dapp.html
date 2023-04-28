@@ -13,8 +13,29 @@
     <button onclick="connectMetamask()">Connect Metamask</button>
     <p id="accountNumber"></p>
     <p id="blockNumber"></p>
+
+    <h4>Using the Provider API</h4>
+    <p id = "network"></p>
+    <p id = "account"></p>
+
+    <h4>Other Operations</h4>
+    <button onclick="getCoinbaseAddress()">Get Coinbase Address</button>
+    <p id = "other1"></p>
+
+    <button onclick="getProtocolNum()">Get Protocol Number</button>
+    <p id = "other2"></p>
+
+    <button onclick="getBalanceAddress()">Get Balance</button>
+    <p id = "other3"></p>
+
+    <button onclick="getTxCount()">Get Transaction of an Address</button>
+    <p id = "other4"></p>
+
+    <button onclick="estimateGas()">Estimate Gas</button>
+    <p id = "other5"></p>
     <script>
         const connectMetamask = () => {
+            
             if(window.ethereum !== "undefined") {
                 ethereum.request({method: "eth_requestAccounts"}).then(function(res){
                     console.log(res);
@@ -29,6 +50,74 @@
             } else {
                 return false;
             }
+        }
+
+        window.addEventListener("load", (event)=>{
+            if(window.ethereum){
+                // React on changing the network (e.g mainnet => goerli)
+                ethereum.on('chainChanged', function(res){
+                    console.log(res);
+                    document.getElementById("network").innerHTML = "Network: " + res;
+                })
+
+                ethereum.on("accountsChanged", function(res){
+                    console.log(res);
+                    document.getElementById("account").innerHTML = "Account: " + res;
+                })
+            } else {
+             return false
+            }
+        })
+
+        const getCoinbaseAddress = () => {
+            if(window.ethereum !== "undefined") {
+                ethereum.request({method: "eth_coinbase"}).then(function(res){
+                    console.log("Coinbase address: " + res);
+                    document.getElementById("other1").innerHTML = "Coinbase address: " + res;
+                })
+            }
+        }
+
+        const getProtocolNum = () => {
+            if(window.ethereum !== "undefined") {
+                ethereum.request({method: 'eth_protocolVersion'}).then(function(res){
+                    console.log("Protocol: " + res);
+                    document.getElementById("other2").innerHTML = "Protocol: " + res;
+                })
+            }
+        }
+
+        const getBalanceAddress = () => {
+            ethereum.request({method: "eth_getBalance", params: ["0x50b716662ca9717BA5DD7B20b5b722Cf15B0821B", "latest"]}).then(function(res){
+                console.log("Balance: "+ res);
+                document.getElementById("other3").innerHTML = "Balance: " + res;
+            })
+        }
+
+        const getTxCount = () => {
+            // Requesting the transaction count sent from an address
+            params1 = ["0x50b716662ca9717BA5DD7B20b5b722Cf15B0821B","latest",];
+            ethereum.request({method: 'eth_getTransactionCount', params: params1}).then(function(res){
+                console.log("TX Count: " + res);
+                document.getElementById("other4").innerHTML = "TX Count: " + res;
+            })
+        }
+
+        const estimateGas = () => {
+            // estimate Gas of a transaction
+            estGasParams = [{
+                "data": "0xd46e8dd67c5d32be8d46e8dd67c5d32be8058bb8eb970870f072445675058bb8eb970870f072445675",
+                "from": "0x50b716662ca9717BA5DD7B20b5b722Cf15B0821B",
+                "gas": "0x76c0",
+                "gasPrice": "0x9184e72a000",
+                "to": "0xd46e8dd67c5d32be8058bb8eb970870f07244567",
+                "value": "0x9184e72a"
+            }]
+
+            ethereum.request({method: 'eth_estimateGas', params: estGasParams}).then(function(res){
+                console.log("Gas estimation: " + res);
+                document.getElementById("other5").innerHTML = "Gas estimation: " + res;
+            })
         }
     </script>
 </body>
