@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/web3@latest/dist/web3.min.js"></script>
+    <title>Express-Metamask-Web3</title>
+    
+</head>
+<body>
+    <h1>Mittweida Project Express</h1>
+    <button onclick="connectMetamask()">Connect Metamask</button>
+    <p id="accountNumber"></p>
+    <p id="blockNumber"></p>
+    <script>
+        const connectMetamask = () => {
+            if(window.ethereum !== "undefined") {
+                ethereum.request({method: "eth_requestAccounts"}).then(function(res){
+                    console.log(res);
+                    document.getElementById("accountNumber").innerHTML = `Account: ${res[0]}`;
+                    window.web3 = new Web3(window.ethereum);
+                    web3.eth.getBlockNumber().then(function(blknr){
+                        console.log(blknr);
+                        document.getElementById("blockNumber").innerHTML = `Block Number: ${blknr}`;
+                    })
+
+                })
+            } else {
+                return false;
+            }
+        }
+    </script>
+</body>
+</html>
