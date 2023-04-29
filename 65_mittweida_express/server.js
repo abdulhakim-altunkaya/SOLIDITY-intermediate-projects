@@ -9,6 +9,9 @@ app.get("/", (req, res) => {
 app.get("/home", (req, res) => {
     res.sendFile(path.join(__dirname, "/dapp2.html"));
 });
+app.get("/test", (req, res) => {
+    res.sendFile(path.join(__dirname, "/dapp3.html"));
+});
 
 
 const server = app.listen(5000);

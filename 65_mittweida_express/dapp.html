@@ -34,7 +34,8 @@
     <button onclick="estimateGas()">Estimate Gas</button>
     <p id = "other5"></p>
 
-    <button onclick="homeRoute()">Go to Home Route</button>
+    <button onclick="homeRoute()">Go to Home Route</button> <br><br>
+    <button onclick="testRoute()">Go to Test Route</button> 
     <script>
         const connectMetamask = () => {
             
@@ -124,6 +125,9 @@
 
         const homeRoute = () => {
             window.location.href = "/home";
+        }
+        const testRoute = () => {
+            window.location.href = "/test";
         }
     </script>
 </body>

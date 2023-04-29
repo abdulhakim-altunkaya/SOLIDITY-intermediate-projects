@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		<script src="https://unpkg.com/web3@latest/dist/web3.min.js"></script>
+        <script>
+            var abi = [
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			}
+		],
+		"name": "payIn",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getMyDetails",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+];
+            var address = "0xAc9dfEfE7506Bf7D7b543A36506dDbFD60ffde27";
+            window.addEventListener("load", (event)=>{
+                if(window.ethereum){
+                    ethereum.request({method: 'eth_requestAccounts'}).then(function(res){
+                        console.log(res);
+                        window.web3 = new Web3(window.ethereum);
+						var contract = new web3.eth.Contract(abi, address);
+                        document.getElementById("send").addEventListener("click", (event) =>{
+                            amount = document.getElementById("amount").value;
+                            name = document.getElementById("name").value;
+                            console.log("amount: " + amount);
+                            console.log("name: " + name);
+                            contract.methods.payIn(name).send({
+                                "value": amount, //e. g. 10000000000000000,
+                                "from" : res[0]
+                            }).then(function(result){
+								console.log(result);
+							});
+                        })
+
+						document.getElementById("call").addEventListener("click", (event) => {
+							contract.methods.getMyDetails().call({
+								"from" : res[0]
+							}).then(function(result){
+								console.log(result);
+							});
+						});
+                    })
+                }else{
+                    return false
+                }
+            })
+        </script>
+    </head>
+    <body>
+        <h1>Contract Interaction</h1>
+        <div>
+            <input type = "text" id = "name">
+            <label for = "recipientAddress">Name</span>
+            <input type = "text" id = "amount">
+            <label for = "amount">Amount</span>
+            <button id = "send">Use PayIn function</button>
+			<button id = "call">Use getMyName Function</button>
+        </div>
+    </body>
+</html>
