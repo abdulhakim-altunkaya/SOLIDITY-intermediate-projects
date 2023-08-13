@@ -30,28 +30,39 @@ contract TokenA is ERC20Capped {
         return balanceOf(address(this)) / (10**18);
     }
 
-    uint public fee = 1 ether;
+    uint public fee = 3;
 
-
-    //contrct --> ccount
     function collectFees() external {
         uint balanceFoggy = balanceOf(address(this));
         if (balanceFoggy > 0) {
             _transfer(address(this), msg.sender, balanceFoggy);
         }
     }
-
-    // ccount --> contrct
     //approve FoggyBank contract before sending tokens to it
-    function approveFoggyBank(address _contractFoggyBank, uint _amount) external {
-        require(_amount > 0, "approve amount must be greater than 0");
-        uint amount = _amount*(10**18);
-        _approve(msg.sender, _contractFoggyBank, amount);
-        IERC20(address(this)).transferFrom(msg.sender, address(this), amount);
+
+    //CONTRACT --> CONTRACT
+    function makePayment4() external {
+        IERC20(address(this)).transfer(address(this), fee*(10**18));
     }
 
-    function addLiquidityTokenA(uint _amount) external {
-        IERC20(address(this)).transferFrom(msg.sender, address(this), _amount);
+    //ACCOUNT --> CONTRACT
+    function makePayment1() external {
+        require(balanceOf(msg.sender) >= fee*(10**18), "you don't have CONTOR");
+        require(msg.sender == tx.origin, "contracts cannot withdraw");
+        require(msg.sender != address(0), "real addresses can withdraw");
+        _transfer(msg.sender, address(this), fee*(10**18));
+    }
+
+    //ACCOUNT --> CONTRACT
+    function makePayment2() external {
+        uint amount = fee*(10**18);
+        _approve(msg.sender, address(this), amount);
+        IERC20(address(this)).transferFrom(msg.sender, address(this), fee*(10**18));
+    }
+    function makePayment3() external {
+        uint amount = fee*(10**18);
+        _approve(msg.sender, address(this), amount);
+        transferFrom(msg.sender, address(this), fee*(10**18));
     }
 
 }
