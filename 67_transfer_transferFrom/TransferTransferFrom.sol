@@ -32,17 +32,21 @@ contract TokenA is ERC20Capped {
 
     uint public fee = 3;
 
-    function collectFees() external {
-        uint balanceFoggy = balanceOf(address(this));
-        if (balanceFoggy > 0) {
-            _transfer(address(this), msg.sender, balanceFoggy);
-        }
-    }
-    //approve FoggyBank contract before sending tokens to it
-
-    //CONTRACT --> CONTRACT
-    function makePayment4() external {
+    //CONTRACT --> ACCOUNT
+    function receiveTokens1() external {
         IERC20(address(this)).transfer(address(this), fee*(10**18));
+    }
+
+    //CONTRACT --> ACCOUNT
+    function receiveTokens2() external {
+        _transfer(address(this), msg.sender, fee*(10**18));
+    }
+    //CONTRACT --> ACCOUNT
+    //this will give error because "_transfer" is in ERC20 but not in IERC20
+    //Thats why above function will work, because this contract inheritss from ERC20Capped
+    // but this one will not work as it is attempting to access it from IERC20
+    function receiveTokens3() external {
+        IERC20(address(this))._transfer(address(this), msg.sender, fee*(10**18));
     }
 
     //ACCOUNT --> CONTRACT
@@ -59,6 +63,7 @@ contract TokenA is ERC20Capped {
         _approve(msg.sender, address(this), amount);
         IERC20(address(this)).transferFrom(msg.sender, address(this), fee*(10**18));
     }
+    //this doesnt work, it errors
     function makePayment3() external {
         uint amount = fee*(10**18);
         _approve(msg.sender, address(this), amount);
