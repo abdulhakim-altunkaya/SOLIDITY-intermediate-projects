@@ -44,7 +44,8 @@ contract TokenA is ERC20Capped {
     //CONTRACT --> ACCOUNT
     //this will give error because "_transfer" is in ERC20 but not in IERC20
     //Thats why above function will work, because this contract inheritss from ERC20Capped
-    // but this one will not work as it is attempting to access it from IERC20
+    //but this one will not work as it is attempting to access it from IERC20
+    //This same thing goes for "_approve"
     function receiveTokens3() external {
         IERC20(address(this))._transfer(address(this), msg.sender, fee*(10**18));
     }
